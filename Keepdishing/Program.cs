@@ -4,16 +4,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.FileProviders;
 
-var builder = WebApplication.CreateBuilder(args);
+#region Builder
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+{
+    options.UseSqlServer(connectionString);
+});
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+
+}).AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddRazorPages();
 
 builder.Services.AddSpaStaticFiles(configuration =>
@@ -21,10 +28,11 @@ builder.Services.AddSpaStaticFiles(configuration =>
     configuration.RootPath = "react-app/dist";
 });
 
+#endregion
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -32,13 +40,11 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseSpaStaticFiles();
 
 
@@ -48,20 +54,21 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-app.UseRouting();
-
-app.UseSpa(spa =>
+app.Map("/app",spa =>
 {
-    spa.Options.SourcePath = "react-app";
-    spa.Options.DevServerPort = 3000;
-
-    if (app.Environment.IsDevelopment())
+    spa.UseSpa(spa =>
     {
-        spa.UseProxyToSpaDevelopmentServer($"http://localhost:{spa.Options.DevServerPort}/");
+        spa.Options.SourcePath = "react-app";
+        spa.Options.DevServerPort = 3000;
 
-    }
+        if (app.Environment.IsDevelopment())
+        {
+            spa.UseProxyToSpaDevelopmentServer($"http://localhost:{spa.Options.DevServerPort}");
+
+        }
+    });
 });
 
-//app.MapFallbackToFile("index.html");
+//app.MapFallbackToPage("/Error");
 
 app.Run();
