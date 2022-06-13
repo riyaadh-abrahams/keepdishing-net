@@ -51,23 +51,23 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-app.MapRazorPages();
-
-app.MapWhen(httpContext => !httpContext.Request.Path.StartsWithSegments("/Identity"), spa =>
+//app.MapRazorPages();
+app.UseRouting();
+app.UseEndpoints(endpoints =>
 {
-    spa.UseSpa(spa =>
-    {
-        spa.Options.SourcePath = "react-app";
-        spa.Options.DevServerPort = 3000;
-
-        if (app.Environment.IsDevelopment())
-        {
-            spa.UseProxyToSpaDevelopmentServer($"http://localhost:{spa.Options.DevServerPort}/");
-
-        }
-    });
+    endpoints.MapRazorPages();
 });
 
-//app.MapFallbackToFile("index.html");
+app.UseSpa(spa =>
+{
+    spa.Options.SourcePath = "react-app";
+    spa.Options.DevServerPort = 3000;
+
+    if (app.Environment.IsDevelopment())
+    {
+        spa.UseProxyToSpaDevelopmentServer($"http://localhost:{spa.Options.DevServerPort}/");
+
+    }
+});
 
 app.Run();
