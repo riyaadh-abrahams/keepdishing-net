@@ -30,7 +30,6 @@ builder.Services.AddSpaStaticFiles(configuration =>
 
 #endregion
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -54,7 +53,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-app.Map("/app",spa =>
+app.MapWhen(httpContext => !httpContext.Request.Path.StartsWithSegments("/Identity"), spa =>
 {
     spa.UseSpa(spa =>
     {
@@ -63,12 +62,12 @@ app.Map("/app",spa =>
 
         if (app.Environment.IsDevelopment())
         {
-            spa.UseProxyToSpaDevelopmentServer($"http://localhost:{spa.Options.DevServerPort}");
+            spa.UseProxyToSpaDevelopmentServer($"http://localhost:{spa.Options.DevServerPort}/");
 
         }
     });
 });
 
-//app.MapFallbackToPage("/Error");
+//app.MapFallbackToFile("index.html");
 
 app.Run();
