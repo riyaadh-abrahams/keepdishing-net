@@ -2,7 +2,7 @@ using Keepdishing.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +15,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
+
+builder.Services.AddSpaStaticFiles(configuration =>
+{
+    configuration.RootPath = "react-app/dist";
+});
+
 
 var app = builder.Build();
 
@@ -33,6 +39,15 @@ else
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseSpaStaticFiles();
+
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+
+app.MapRazorPages();
+
 app.UseRouting();
 
 app.UseSpa(spa =>
@@ -47,9 +62,6 @@ app.UseSpa(spa =>
     }
 });
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapRazorPages();
+//app.MapFallbackToFile("index.html");
 
 app.Run();
