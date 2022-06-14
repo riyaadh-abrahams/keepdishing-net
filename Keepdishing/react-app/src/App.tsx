@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
+import { useGetWeatherForecastQuery } from './store/api/api'
 
 function App() {
   const [count, setCount] = useState(0)
+
+  const {data} = useGetWeatherForecastQuery();
 
   return (
     <div className="App">
@@ -19,23 +22,7 @@ function App() {
           Edit <code>App.tsx</code> and save to test HMR updates.
         </p>
         <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
+         {JSON.stringify(data)}
         </p>
       </header>
     </div>
