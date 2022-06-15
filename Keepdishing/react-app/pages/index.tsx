@@ -1,11 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useGetWeatherForecastQuery } from "../store/api/api";
+import api from "../store/api/api";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
-  const { data, isFetching, refetch } = useGetWeatherForecastQuery();
+  const { data, isFetching, refetch } = api.useGetWeatherForecastQuery();
+  const { data: user } = api.useGetApiAuthGetCurrentUserQuery();
+  const [logout] = api.usePostApiAuthLogoutMutation();
 
   return (
     <div className={styles.container}>
@@ -16,16 +18,23 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org"> .Net</a>
-        </h1>
+        <h1 className={styles.title}>Welcome to .Net</h1>
 
-        <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-        <button onClick={refetch}>Refetch</button>
-        <p>{JSON.stringify(data)}</p>
+        {user ? (
+          <div>
+            <p>Logged in: {user.email} </p>
+
+            <button onClick={() => logout()}>Logout</button>
+          </div>
+        ) : (
+          <p className={styles.description}>
+            No Logged in : <a href="/Identity/Account/Login"> Login </a>
+          </p>
+        )}
+        <button disabled={!user} onClick={refetch}>
+          Refetch
+        </button>
+        <p style={{ textAlign: "center" }}>{JSON.stringify(data)}</p>
       </main>
 
       <footer className={styles.footer}>

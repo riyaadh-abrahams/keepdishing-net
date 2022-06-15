@@ -76,32 +76,10 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-//Added this to redirect to login page prior to loading SPA    
-app.Use(async (context, next) =>
-{
-
-    if (!context.User.Identity.IsAuthenticated)
-    {
-        await context.ChallengeAsync("Identity.Application");
-    }
-    else
-    {
-        await next();
-    }
-
-});
-
-
 app.UseSpa(spa =>
 {
-    spa.Options.SourcePath = "react-app";
     spa.Options.DevServerPort = 3000;
-
-    if (app.Environment.IsDevelopment())
-    {
-        spa.UseProxyToSpaDevelopmentServer($"http://localhost:{spa.Options.DevServerPort}/");
-
-    }
+    spa.UseProxyToSpaDevelopmentServer($"http://localhost:{spa.Options.DevServerPort}/");
 });
 
 app.Run();
