@@ -78,7 +78,8 @@ app.UseEndpoints(endpoints =>
 
 app.UseSpa(spa =>
 {
-    spa.UseProxyToSpaDevelopmentServer("http://frontend:3000/");
+    var host = app.Environment.IsDevelopment() ? "localhost" : "frontend";
+    spa.UseProxyToSpaDevelopmentServer($"http://{host}:3000/");
 });
 
 app.Run();
