@@ -1,0 +1,14 @@
+version: "4"
+services:
+  frontend: 
+    build: 
+      context: ./Keepdishing/react-app
+    ports: 
+      - "3000:3000"
+  backend:    
+    container_name: backend
+    build:      
+      context: ./Keepdishing
+    depends_on: [ frontend ]        
+    ports:
+      - "8080:80"
