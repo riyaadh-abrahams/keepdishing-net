@@ -1,26 +1,29 @@
 {
   "name": "react-app",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "api": "npx @rtk-query/codegen-openapi openapi-config.ts"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
-    "@rtk-query/codegen-openapi": "^1.0.0-alpha.1",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "next": "12.1.6",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
     "react-redux": "^8.0.2"
   },
   "devDependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "@vitejs/plugin-react": "^1.3.0",
+    "@rtk-query/codegen-openapi": "^1.0.0-alpha.1",
+    "@types/node": "17.0.42",
+    "@types/react": "18.0.12",
+    "@types/react-dom": "18.0.5",
+    "eslint": "8.17.0",
+    "eslint-config-next": "12.1.6",
     "ts-node": "^10.8.1",
-    "typescript": "^4.6.3",
-    "vite": "^2.9.9"
+    "typescript": "4.7.3"
   }
 }
