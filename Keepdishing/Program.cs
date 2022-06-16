@@ -107,8 +107,7 @@ app.RunProxy(proxy => proxy.UseHttp(frontendUrl,
     {
         builder.WithBeforeSend((c, hrm) =>
         {
-            // Set something that is needed for the downstream endpoint.
-            hrm.Headers.Add("Username", "Test");
+            hrm.Headers.Add("Username", c.User.Identity.Name);
             return Task.CompletedTask;
         });
 

@@ -7,15 +7,18 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "api": "npx @rtk-query/codegen-openapi openapi-config.ts"
+    "rtk": "npx @rtk-query/codegen-openapi openapi-config.ts",
+    "api": "cd nswag && refresh.bat"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.2.1",
     "@emotion/react": "11",
     "@emotion/styled": "11",
     "@reduxjs/toolkit": "^1.8.2",
+    "axios": "^0.27.2",
     "framer-motion": "6",
     "next": "12.1.6",
+    "nswag": "^13.16.1",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-redux": "^8.0.2"
