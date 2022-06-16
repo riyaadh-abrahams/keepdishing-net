@@ -8,6 +8,7 @@ const Home: NextPage = () => {
   const { data, isFetching, refetch } = api.useGetWeatherForecastQuery();
   const { data: user } = api.useGetApiAuthGetCurrentUserQuery();
   const [logout] = api.usePostApiAuthLogoutMutation();
+  const [login] = api.usePostApiAuthLogInMutation();
 
   return (
     <div className={styles.container}>
@@ -28,7 +29,20 @@ const Home: NextPage = () => {
           </div>
         ) : (
           <p className={styles.description}>
-            No Logged in : <a href="/Identity/Account/Login"> Login </a>
+            No Logged in :{" "}
+            <button
+              onClick={() =>
+                login({
+                  loginInput: {
+                    email: "riyaadh.abr@gmail.com",
+                    password: "Cat.00000",
+                    rememberMe: true,
+                  },
+                })
+              }
+            >
+              Login
+            </button>
           </p>
         )}
         <button disabled={!user} onClick={refetch}>

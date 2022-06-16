@@ -1,6 +1,16 @@
 import { baseApi as api } from "./baseApi";
 const injectedRtkApi = api.injectEndpoints({
   endpoints: (build) => ({
+    postApiAuthLogIn: build.mutation<
+      PostApiAuthLogInApiResponse,
+      PostApiAuthLogInApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/Auth/LogIn`,
+        method: "POST",
+        body: queryArg.loginInput,
+      }),
+    }),
     getApiAuthGetCurrentUser: build.query<
       GetApiAuthGetCurrentUserApiResponse,
       GetApiAuthGetCurrentUserApiArg
@@ -23,6 +33,10 @@ const injectedRtkApi = api.injectEndpoints({
   overrideExisting: false,
 });
 export { injectedRtkApi as generatedApi };
+export type PostApiAuthLogInApiResponse = unknown;
+export type PostApiAuthLogInApiArg = {
+  loginInput: LoginInput;
+};
 export type GetApiAuthGetCurrentUserApiResponse =
   /** status 200 Success */ CurrentUser;
 export type GetApiAuthGetCurrentUserApiArg = void;
@@ -31,6 +45,11 @@ export type PostApiAuthLogoutApiArg = void;
 export type GetWeatherForecastApiResponse =
   /** status 200 Success */ WeatherForecast[];
 export type GetWeatherForecastApiArg = void;
+export type LoginInput = {
+  email?: string | null;
+  password?: string | null;
+  rememberMe?: boolean;
+};
 export type CurrentUser = {
   userName: string;
   email: string;
@@ -43,6 +62,7 @@ export type WeatherForecast = {
   summary?: string | null;
 };
 export const {
+  usePostApiAuthLogInMutation,
   useGetApiAuthGetCurrentUserQuery,
   usePostApiAuthLogoutMutation,
   useGetWeatherForecastQuery,

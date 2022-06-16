@@ -9,6 +9,9 @@ const api = generatedApi.enhanceEndpoints({
     postApiAuthLogout: {
       invalidatesTags: ["User"],
     },
+    postApiAuthLogIn: {
+      invalidatesTags: ["User"],
+    },
   },
 });
 
