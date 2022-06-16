@@ -1,8 +1,8 @@
-﻿using Keepdishing.Model;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Keepdishing.Controllers
 {
@@ -14,8 +14,6 @@ namespace Keepdishing.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public record LoginInput(string email, string password, bool rememberMe);
-
         public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
@@ -25,9 +23,9 @@ namespace Keepdishing.Controllers
         [HttpPost("LogIn")]
         public async Task<IActionResult> LogIn(LoginInput credentials)
         {
-            if (credentials.email != null && credentials.password != null)
+            if (credentials.Username != null && credentials.Password != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(credentials.email, credentials.password, credentials.rememberMe, false);
+                var result = await _signInManager.PasswordSignInAsync(credentials.Username, credentials.Password, credentials.RememberMe, false);
                 if (result.Succeeded)
                 {
                     return new JsonResult(result);
@@ -41,16 +39,15 @@ namespace Keepdishing.Controllers
         [HttpGet("GetCurrentUser")]
         public async Task<CurrentUser> GetCurrentUser() 
         {
-            if (User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated) return null;
+
+            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            return new CurrentUser
             {
-                var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
-                return new CurrentUser(user.UserName, user.Email, user.EmailConfirmed);
-            }
-            else
-            {
-                return null;
-            }
-            
+                UserName = user.UserName,
+                Email = user.Email,
+                EmailConfirmed = user.EmailConfirmed
+            };
         }
 
         [Authorize]
@@ -60,5 +57,30 @@ namespace Keepdishing.Controllers
             await _signInManager.SignOutAsync();
             return Ok();
         }
+    }
+
+    public record LoginInput
+    {
+        [Required]
+        public string Username { get; init; }
+
+        [Required]
+        public string Password { get; init; }
+
+        public bool RememberMe { get; init; }
+
+    }
+
+    public record CurrentUser
+    {
+
+        [Required]
+        public string UserName { get; init; }
+
+        [Required]
+        public string Email { get; init; }
+
+        [Required]
+        public bool EmailConfirmed { get; init; }
     }
 }

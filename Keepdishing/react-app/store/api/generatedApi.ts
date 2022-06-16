@@ -46,8 +46,8 @@ export type GetWeatherForecastApiResponse =
   /** status 200 Success */ WeatherForecast[];
 export type GetWeatherForecastApiArg = void;
 export type LoginInput = {
-  email?: string | null;
-  password?: string | null;
+  username: string;
+  password: string;
   rememberMe?: boolean;
 };
 export type CurrentUser = {

@@ -34,7 +34,7 @@ const Home: NextPage = () => {
               onClick={() =>
                 login({
                   loginInput: {
-                    email: "riyaadh.abr@gmail.com",
+                    username: "riyaadh.abr@gmail.com",
                     password: "Cat.00000",
                     rememberMe: true,
                   },

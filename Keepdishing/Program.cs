@@ -33,7 +33,10 @@ builder.Services.AddSpaStaticFiles(configuration =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SupportNonNullableReferenceTypes();
+});
 
 #endregion
 
