@@ -2,16 +2,32 @@ using Keepdishing.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AspNetCore.Proxy;
+using dotenv.net;
+using Npgsql;
 
 
 #region Builder
 
+DotEnv.Load();
+
+var frontendHost = Environment.GetEnvironmentVariable("FRONTEND_HOST");
+var frontendPort = Environment.GetEnvironmentVariable("FRONTEND_PORT");
+var frontendUrl = $"http://{frontendHost}:{frontendPort}/";
+
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(connectionString);
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    var sb = new NpgsqlConnectionStringBuilder(connectionString)
+    {
+        Host = Environment.GetEnvironmentVariable("DB_HOST"),
+        Username = Environment.GetEnvironmentVariable("DB_USER"),
+        Password = Environment.GetEnvironmentVariable("DB_PASS"),
+        Database = Environment.GetEnvironmentVariable("DB_NAME")
+    };
+
+    options.UseNpgsql(sb.ToString());
 });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -41,6 +57,8 @@ builder.Services.AddProxies();
 #endregion
 
 var app = builder.Build();
+
+//var x = Environment.GetEnvironmentVariable("DB_PASS");
 
 if (app.Environment.IsDevelopment())
 {
@@ -79,8 +97,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
+app.RunProxy(proxy => proxy.UseHttp(frontendUrl));
 
-var host = app.Environment.IsDevelopment() ? "localhost" : "frontend";
-app.RunProxy(proxy => proxy.UseHttp($"http://{host}:3000/"));
 
 app.Run();
