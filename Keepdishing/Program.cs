@@ -1,10 +1,8 @@
 using Keepdishing.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using AspNetCore.Proxy;
+
 
 #region Builder
 
@@ -37,6 +35,8 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SupportNonNullableReferenceTypes();
 });
+
+builder.Services.AddProxies();
 
 #endregion
 
@@ -79,10 +79,8 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-app.UseSpa(spa =>
-{
-    var host = app.Environment.IsDevelopment() ? "localhost" : "frontend";
-    spa.UseProxyToSpaDevelopmentServer($"http://{host}:3000/");
-});
+
+var host = app.Environment.IsDevelopment() ? "localhost" : "frontend";
+app.RunProxy(proxy => proxy.UseHttp($"http://{host}:3000/"));
 
 app.Run();
