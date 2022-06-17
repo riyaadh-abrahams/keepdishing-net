@@ -5,22 +5,24 @@ import Image from "next/image";
 import { CurrentUser } from "../shared/client";
 import { getClient } from "../shared/services";
 import api from "../store/api/api";
+import { wrapper } from "../store/store";
 import styles from "../styles/Home.module.css";
 
-type HomeProps = {
-  user: CurrentUser;
-};
-
-export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ req, res }) => {
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res }) => {
   const client = getClient(req.headers.cookie);
   const user = await client.getCurrentUser();
-  return {
-    props: { user },
-  };
-};
 
-const Home = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  //const { data: user } = api.useGetApiAuthGetCurrentUserQuery();
+  store.dispatch(api.endpoints.getApiAuthGetCurrentUser.initiate());
+  await Promise.all(api.util.getRunningOperationPromises());
+  console.log(store.getState().api.queries);
+
+  return {
+    props: {},
+  };
+});
+
+const Home = () => {
+  const { data: user, isError, error } = api.useGetApiAuthGetCurrentUserQuery();
   const { data, isFetching, refetch } = api.useGetWeatherForecastQuery();
 
   const [logout] = api.usePostApiAuthLogoutMutation();
@@ -35,7 +37,7 @@ const Home = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) 
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Welcome to .Net</h1>
+        <div> {isError ? JSON.stringify(error) : <h1 className={styles.title}>Welcome to .Net</h1>}</div>
 
         {user ? (
           <div>
