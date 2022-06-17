@@ -2,14 +2,23 @@ import { Box, Center, Heading } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { InferGetServerSidePropsType } from "next";
 import Link from "next/link";
-import { client } from "../shared/services";
-import axios from "axios";
+import { getClient } from "../shared/services";
 import { CurrentUser } from "../store/api/generatedApi";
 
-const Home = ({
-  user,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  console.log({ user });
+type HomeProps = {
+  user: CurrentUser;
+};
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ req, res }) => {
+  const client = getClient(req.headers.cookie);
+  const user = await client.getCurrentUser();
+  return {
+    props: { user },
+  };
+};
+
+const Home = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  console.log(user.email);
   return (
     <Box>
       {JSON.stringify(user)}
@@ -21,23 +30,6 @@ const Home = ({
       </Center>
     </Box>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  //const user = await client.getCurrentUser();
-  //var user = req.headers["username"];
-  const user = await axios.get<CurrentUser>(
-    "http://localhost:5216/api/Auth/GetCurrentUser",
-    {
-      withCredentials: true,
-      headers: {
-        Cookie: req.headers.cookie ?? "",
-      },
-    }
-  );
-  return {
-    props: { user: user.data },
-  };
 };
 
 export default Home;

@@ -1,13 +1,28 @@
 import { Button } from "@chakra-ui/react";
-import type { NextPage } from "next";
+import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { CurrentUser } from "../shared/client";
+import { getClient } from "../shared/services";
 import api from "../store/api/api";
 import styles from "../styles/Home.module.css";
 
-const Home: NextPage = () => {
-  const { data: user } = api.useGetApiAuthGetCurrentUserQuery();
+type HomeProps = {
+  user: CurrentUser;
+};
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ req, res }) => {
+  const client = getClient(req.headers.cookie);
+  const user = await client.getCurrentUser();
+  return {
+    props: { user },
+  };
+};
+
+const Home = ({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  //const { data: user } = api.useGetApiAuthGetCurrentUserQuery();
   const { data, isFetching, refetch } = api.useGetWeatherForecastQuery();
+
   const [logout] = api.usePostApiAuthLogoutMutation();
   const [login] = api.usePostApiAuthLogInMutation();
 

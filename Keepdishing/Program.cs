@@ -7,23 +7,19 @@ using Npgsql;
 using Serilog;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
-
-#region Builder
-
+/**
+ * Load environment variables from .env file
+ */
 DotEnv.Load();
-
-var frontendHost = Environment.GetEnvironmentVariable("FRONTEND_HOST");
-var frontendPort = Environment.GetEnvironmentVariable("FRONTEND_PORT");
-var frontendUrl = $"http://{frontendHost}:{frontendPort}/";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((ctx, lc) =>
+builder.Host.UseSerilog((context, logConfiguration) =>
 {
-    lc.WriteTo.Console();
+    logConfiguration.WriteTo.Console();
 });
 
-/*
+/**
  * We should only allow HTTP 1.1 during development or else we will get warnings
  * when we proxy to the NextJS server
  */
@@ -34,6 +30,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
         serverOptions.ConfigureEndpointDefaults(lo => lo.Protocols = HttpProtocols.Http1);
     }
 });
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -57,11 +54,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddProxies();
 
-#endregion
-
 var app = builder.Build();
-
-//var x = Environment.GetEnvironmentVariable("DB_PASS");
 
 if (app.Environment.IsDevelopment())
 {
@@ -81,7 +74,6 @@ app.UseRouting();
 //Add Header to API Requests so that we return 401 instead of redirecting to login page 
 app.Use(async (context, next) =>
 {
-
     if (context.Request.Path.Value.StartsWith("/api"))
     {
         context.Request.Headers.Add("X-Requested-With", "XMLHttpRequest");
@@ -102,7 +94,8 @@ app.UseEndpoints(endpoints =>
  * Proxy Requests to the NextJS Server if no API or MVC Routes has been matched at this point
  * Include some error handling. If the Frontend Server is not running then show an error page
  */
-app.RunProxy(proxy => proxy.UseHttp(frontendUrl,
+app.RunProxy(proxy => proxy.UseHttp(
+    Environment.GetEnvironmentVariable("FRONTEND_URL"),
     builder =>
     {
         builder.WithBeforeSend((c, hrm) =>

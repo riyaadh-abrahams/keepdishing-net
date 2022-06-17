@@ -8,13 +8,7 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  CancelToken,
-} from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
 
 export interface IClient {
   /**
@@ -39,8 +33,7 @@ export interface IClient {
 export class Client implements IClient {
   private instance: AxiosInstance;
   private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
-    undefined;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
   constructor(baseUrl?: string, instance?: AxiosInstance) {
     this.instance = instance ? instance : axios.create();
@@ -52,10 +45,7 @@ export class Client implements IClient {
    * @param body (optional)
    * @return Success
    */
-  logIn(
-    body: LoginInput | undefined,
-    cancelToken?: CancelToken | undefined
-  ): Promise<void> {
+  logIn(body: LoginInput | undefined, cancelToken?: CancelToken | undefined): Promise<void> {
     let url_ = this.baseUrl + "/api/Auth/LogIn";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -100,12 +90,7 @@ export class Client implements IClient {
       return Promise.resolve<void>(null as any);
     } else if (status !== 200 && status !== 204) {
       const _responseText = response.data;
-      return throwException(
-        "An unexpected server error occurred.",
-        status,
-        _responseText,
-        _headers
-      );
+      return throwException("An unexpected server error occurred.", status, _responseText, _headers);
     }
     return Promise.resolve<void>(null as any);
   }
@@ -140,9 +125,7 @@ export class Client implements IClient {
       });
   }
 
-  protected processGetCurrentUser(
-    response: AxiosResponse
-  ): Promise<CurrentUser> {
+  protected processGetCurrentUser(response: AxiosResponse): Promise<CurrentUser> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === "object") {
@@ -160,12 +143,7 @@ export class Client implements IClient {
       return Promise.resolve<CurrentUser>(result200);
     } else if (status !== 200 && status !== 204) {
       const _responseText = response.data;
-      return throwException(
-        "An unexpected server error occurred.",
-        status,
-        _responseText,
-        _headers
-      );
+      return throwException("An unexpected server error occurred.", status, _responseText, _headers);
     }
     return Promise.resolve<CurrentUser>(null as any);
   }
@@ -213,12 +191,7 @@ export class Client implements IClient {
       return Promise.resolve<void>(null as any);
     } else if (status !== 200 && status !== 204) {
       const _responseText = response.data;
-      return throwException(
-        "An unexpected server error occurred.",
-        status,
-        _responseText,
-        _headers
-      );
+      return throwException("An unexpected server error occurred.", status, _responseText, _headers);
     }
     return Promise.resolve<void>(null as any);
   }
@@ -226,9 +199,7 @@ export class Client implements IClient {
   /**
    * @return Success
    */
-  getWeatherForecast(
-    cancelToken?: CancelToken | undefined
-  ): Promise<WeatherForecast[]> {
+  getWeatherForecast(cancelToken?: CancelToken | undefined): Promise<WeatherForecast[]> {
     let url_ = this.baseUrl + "/api/WeatherForecast";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -255,9 +226,7 @@ export class Client implements IClient {
       });
   }
 
-  protected processGetWeatherForecast(
-    response: AxiosResponse
-  ): Promise<WeatherForecast[]> {
+  protected processGetWeatherForecast(response: AxiosResponse): Promise<WeatherForecast[]> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && typeof response.headers === "object") {
@@ -275,12 +244,7 @@ export class Client implements IClient {
       return Promise.resolve<WeatherForecast[]>(result200);
     } else if (status !== 200 && status !== 204) {
       const _responseText = response.data;
-      return throwException(
-        "An unexpected server error occurred.",
-        status,
-        _responseText,
-        _headers
-      );
+      return throwException("An unexpected server error occurred.", status, _responseText, _headers);
     }
     return Promise.resolve<WeatherForecast[]>(null as any);
   }
@@ -312,13 +276,7 @@ export class ApiException extends Error {
   headers: { [key: string]: any };
   result: any;
 
-  constructor(
-    message: string,
-    status: number,
-    response: string,
-    headers: { [key: string]: any },
-    result: any
-  ) {
+  constructor(message: string, status: number, response: string, headers: { [key: string]: any }, result: any) {
     super();
 
     this.message = message;
@@ -335,13 +293,7 @@ export class ApiException extends Error {
   }
 }
 
-function throwException(
-  message: string,
-  status: number,
-  response: string,
-  headers: { [key: string]: any },
-  result?: any
-): any {
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any }, result?: any): any {
   if (result !== null && result !== undefined) throw result;
   else throw new ApiException(message, status, response, headers, null);
 }
