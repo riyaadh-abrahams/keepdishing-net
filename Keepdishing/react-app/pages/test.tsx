@@ -9,10 +9,9 @@ import { wrapper } from "../store/store";
 import styles from "../styles/Home.module.css";
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res }) => {
-  const client = getClient(req.headers.cookie);
-  const user = await client.getCurrentUser();
-
   store.dispatch(api.endpoints.getApiAuthGetCurrentUser.initiate());
+  store.dispatch(api.endpoints.getWeatherForecast.initiate());
+
   await Promise.all(api.util.getRunningOperationPromises());
   console.log(store.getState().api.queries);
 
@@ -42,6 +41,7 @@ const Home = () => {
         {user ? (
           <div>
             <p>Logged in: {user.email} </p>
+            <p>Email Confirmed: {user.emailConfirmed ? "Yes" : "No"} </p>
 
             <Button onClick={() => logout()}>Logout</Button>
           </div>

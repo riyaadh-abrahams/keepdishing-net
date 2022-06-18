@@ -1,14 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { GetServerSidePropsContext } from "next";
 import { HYDRATE } from "next-redux-wrapper";
-import "./fetch";
 
 export const baseApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5216",
+    baseUrl: process.env.HOST,
     fetchFn: fetch,
     prepareHeaders: (headers, query) => {
       const authCookie = (query.extra as GetServerSidePropsContext)?.req?.headers?.cookie;
+      console.log(process.env.HOST);
       if (authCookie) {
         headers.set("Cookie", authCookie);
       }
