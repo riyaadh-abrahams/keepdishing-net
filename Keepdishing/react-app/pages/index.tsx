@@ -1,4 +1,4 @@
-import { Box, Center, Heading } from "@chakra-ui/react";
+import { Box, Button, Center, Heading, HStack, SimpleGrid, VStack } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { InferGetServerSidePropsType } from "next";
 import Link from "next/link";
@@ -7,41 +7,22 @@ import api from "../store/api/api";
 import { CurrentUser } from "../store/api/generatedApi";
 import { wrapper } from "../store/store";
 
-type HomeProps = {
-  user: CurrentUser;
-};
-
-// export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ req, res }) => {
-//   const client = getClient(req.headers.cookie);
-//   const user = await client.getCurrentUser();
-//   return {
-//     props: { user },
-//   };
-// };
-
-export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res }) => {
-  const client = getClient(req.headers.cookie);
-  const user = await client.getCurrentUser();
-
-  store.dispatch(api.endpoints.getApiAuthGetCurrentUser.initiate());
-  await Promise.all(api.util.getRunningOperationPromises());
-  console.log(store.getState().api.queries);
-
-  return {
-    props: {},
-  };
-});
-
 const Home = () => {
   return (
-    <Box>
-      <Center>
-        <Heading>Home</Heading>
-        <Link href="/test">
-          <a>Go To Test</a>
-        </Link>
+    <SimpleGrid p={8} width="full" height="100vh" columns={[1, 2]}>
+      <Center h="full">
+        <VStack>
+          <Heading>Take your food business to the next level</Heading>
+          <HStack>
+            <Link href="/auth/login">
+              <Button>Get Started</Button>
+            </Link>
+            <Button variant="outline">Find out More</Button>
+          </HStack>
+        </VStack>
       </Center>
-    </Box>
+      <Box rounded="xl" bg="gray"></Box>
+    </SimpleGrid>
   );
 };
 

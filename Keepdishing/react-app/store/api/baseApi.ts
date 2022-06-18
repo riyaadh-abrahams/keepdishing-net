@@ -8,7 +8,6 @@ export const baseApi = createApi({
     fetchFn: fetch,
     prepareHeaders: (headers, query) => {
       const authCookie = (query.extra as GetServerSidePropsContext)?.req?.headers?.cookie;
-      console.log(process.env.HOST);
       if (authCookie) {
         headers.set("Cookie", authCookie);
       }

@@ -1,9 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import { CurrentUser } from "../shared/client";
-import { getClient } from "../shared/services";
 import api from "../store/api/api";
 import { wrapper } from "../store/store";
 import styles from "../styles/Home.module.css";

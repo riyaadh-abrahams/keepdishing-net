@@ -1,12 +1,6 @@
 import { Client } from "./client";
 import axios, { AxiosRequestConfig } from "axios";
-
-// export const client = new Client(
-//   "http://localhost:5000",
-//   axios.create({
-//     transformResponse: (data) => data,
-//   })
-// );
+import { createLogger, format, transports } from "winston";
 
 export const getClient = (cookie: string | undefined) => {
   return new Client(
@@ -19,3 +13,12 @@ export const getClient = (cookie: string | undefined) => {
     })
   );
 };
+
+export const logger = createLogger({
+  level: "info",
+  transports: [
+    new transports.Console({
+      format: format.combine(format.colorize()),
+    }),
+  ],
+});
