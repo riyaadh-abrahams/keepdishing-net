@@ -17,7 +17,9 @@ const Home = () => {
             <Link href="/auth/login">
               <Button>Get Started</Button>
             </Link>
-            <Button variant="outline">Find out More</Button>
+            <Link href="/test">
+              <Button variant="outline">Find out More</Button>
+            </Link>
           </HStack>
         </VStack>
       </Center>
