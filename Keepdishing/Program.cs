@@ -90,6 +90,19 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.Value.StartsWith("/app"))
+    {
+        if (!context.User.Identity.IsAuthenticated)
+        {
+            context.Response.Redirect("/auth/login");
+            return;
+        }
+    }
+    await next();
+});
+
 /**
  * Proxy Requests to the NextJS Server if no API or MVC Routes has been matched at this point
  * Include some error handling. If the Frontend Server is not running then show an error page

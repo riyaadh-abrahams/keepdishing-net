@@ -61,12 +61,12 @@ const Login = () => {
             <VStack>
               <FormControl isInvalid={errors.email != null}>
                 <FormLabel>Email</FormLabel>
-                <Input {...register("email")} />
+                <Input {...register("email")} autoComplete="email" />
                 <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={errors.password != null}>
                 <FormLabel>Password</FormLabel>
-                <PasswordField {...register("password")} />
+                <PasswordField {...register("password")} autoComplete="password" />
                 <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
               </FormControl>
               <FormControl display="flex" alignItems="center">
