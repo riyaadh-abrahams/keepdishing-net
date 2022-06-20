@@ -1,6 +1,5 @@
 import { Client } from "./client";
 import axios, { AxiosRequestConfig } from "axios";
-import { createLogger, format, transports } from "winston";
 
 export const getClient = (cookie: string | undefined) => {
   return new Client(
@@ -13,12 +12,3 @@ export const getClient = (cookie: string | undefined) => {
     })
   );
 };
-
-export const logger = createLogger({
-  level: "info",
-  transports: [
-    new transports.Console({
-      format: format.combine(format.colorize()),
-    }),
-  ],
-});

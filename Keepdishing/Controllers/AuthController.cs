@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Keepdishing.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,18 +22,17 @@ namespace Keepdishing.Controllers
         }
 
         [HttpPost("LogIn")]
+        [ProducesResponseType(typeof(ErrorResponse), 401)]
         public async Task<IActionResult> LogIn(LoginInput credentials)
         {
-            if (credentials.Username != null && credentials.Password != null)
+            if (credentials.Username == null && credentials.Password == null) return StatusCode(401, new ErrorResponse("Email or Password cant be empty"));
+
+            var result = await _signInManager.PasswordSignInAsync(credentials.Username, credentials.Password, credentials.RememberMe, false);
+            if (result.Succeeded)
             {
-                var result = await _signInManager.PasswordSignInAsync(credentials.Username, credentials.Password, credentials.RememberMe, false);
-                if (result.Succeeded)
-                {
-                    return new JsonResult(result);
-                }
-                return StatusCode(401, "Invalid Log In"); 
+                return new JsonResult(result);
             }
-            return StatusCode(401, "Email or Password cant be empty");
+            return StatusCode(401, new ErrorResponse("Invalid Login Details"));
 
         }
 

@@ -8,296 +8,292 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
 export interface IClient {
-  /**
-   * @param body (optional)
-   * @return Success
-   */
-  logIn(body: LoginInput | undefined): Promise<void>;
-  /**
-   * @return Success
-   */
-  getCurrentUser(): Promise<CurrentUser>;
-  /**
-   * @return Success
-   */
-  logout(): Promise<void>;
-  /**
-   * @return Success
-   */
-  getWeatherForecast(): Promise<WeatherForecast[]>;
+    logIn(body: LoginInput | undefined): Promise<void>;
+    /**
+     * @return Success
+     */
+    getCurrentUser(): Promise<CurrentUser>;
+    /**
+     * @return Success
+     */
+    logout(): Promise<void>;
+    /**
+     * @return Success
+     */
+    getWeatherForecast(): Promise<WeatherForecast[]>;
 }
 
 export class Client implements IClient {
-  private instance: AxiosInstance;
-  private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-  constructor(baseUrl?: string, instance?: AxiosInstance) {
-    this.instance = instance ? instance : axios.create();
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
 
-    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-  }
+        this.instance = instance ? instance : axios.create();
 
-  /**
-   * @param body (optional)
-   * @return Success
-   */
-  logIn(body: LoginInput | undefined, cancelToken?: CancelToken | undefined): Promise<void> {
-    let url_ = this.baseUrl + "/api/Auth/LogIn";
-    url_ = url_.replace(/[?&]$/, "");
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
 
-    const content_ = JSON.stringify(body);
-
-    let options_: AxiosRequestConfig = {
-      data: content_,
-      method: "POST",
-      url: url_,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
-        }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processLogIn(_response);
-      });
-  }
-
-  protected processLogIn(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === "object") {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+
+    logIn(body: LoginInput | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Auth/LogIn";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processLogIn(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  /**
-   * @return Success
-   */
-  getCurrentUser(cancelToken?: CancelToken | undefined): Promise<CurrentUser> {
-    let url_ = this.baseUrl + "/api/Auth/GetCurrentUser";
-    url_ = url_.replace(/[?&]$/, "");
-
-    let options_: AxiosRequestConfig = {
-      method: "GET",
-      url: url_,
-      headers: {
-        Accept: "text/plain",
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processLogIn(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processGetCurrentUser(_response);
-      });
-  }
+        if (status === 401) {
+            const _responseText = response.data;
+            let result401: any = null;
+            let resultData401  = _responseText;
+            result401 = JSON.parse(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
 
-  protected processGetCurrentUser(response: AxiosResponse): Promise<CurrentUser> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === "object") {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = JSON.parse(resultData200);
-      return Promise.resolve<CurrentUser>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+
+    /**
+     * @return Success
+     */
+    getCurrentUser(  cancelToken?: CancelToken | undefined): Promise<CurrentUser> {
+        let url_ = this.baseUrl + "/api/Auth/GetCurrentUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetCurrentUser(_response);
+        });
     }
-    return Promise.resolve<CurrentUser>(null as any);
-  }
 
-  /**
-   * @return Success
-   */
-  logout(cancelToken?: CancelToken | undefined): Promise<void> {
-    let url_ = this.baseUrl + "/api/Auth/Logout";
-    url_ = url_.replace(/[?&]$/, "");
-
-    let options_: AxiosRequestConfig = {
-      method: "POST",
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processGetCurrentUser(response: AxiosResponse): Promise<CurrentUser> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processLogout(_response);
-      });
-  }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<CurrentUser>(result200);
 
-  protected processLogout(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === "object") {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<CurrentUser>(null as any);
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+
+    /**
+     * @return Success
+     */
+    logout(  cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Auth/Logout";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "POST",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processLogout(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  /**
-   * @return Success
-   */
-  getWeatherForecast(cancelToken?: CancelToken | undefined): Promise<WeatherForecast[]> {
-    let url_ = this.baseUrl + "/api/WeatherForecast";
-    url_ = url_.replace(/[?&]$/, "");
-
-    let options_: AxiosRequestConfig = {
-      method: "GET",
-      url: url_,
-      headers: {
-        Accept: "text/plain",
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processLogout(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processGetWeatherForecast(_response);
-      });
-  }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
 
-  protected processGetWeatherForecast(response: AxiosResponse): Promise<WeatherForecast[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === "object") {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = JSON.parse(resultData200);
-      return Promise.resolve<WeatherForecast[]>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+
+    /**
+     * @return Success
+     */
+    getWeatherForecast(  cancelToken?: CancelToken | undefined): Promise<WeatherForecast[]> {
+        let url_ = this.baseUrl + "/api/WeatherForecast";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetWeatherForecast(_response);
+        });
     }
-    return Promise.resolve<WeatherForecast[]>(null as any);
-  }
+
+    protected processGetWeatherForecast(response: AxiosResponse): Promise<WeatherForecast[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<WeatherForecast[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<WeatherForecast[]>(null as any);
+    }
 }
 
 export interface CurrentUser {
-  userName: string;
-  email: string;
-  emailConfirmed: boolean;
+    userName: string;
+    email: string;
+    emailConfirmed: boolean;
+}
+
+export interface ErrorResponse {
+    message?: string | undefined;
 }
 
 export interface LoginInput {
-  username: string;
-  password: string;
-  rememberMe?: boolean;
+    username: string;
+    password: string;
+    rememberMe?: boolean;
 }
 
 export interface WeatherForecast {
-  date?: Date;
-  temperatureC?: number;
-  readonly temperatureF?: number;
-  summary?: string | undefined;
+    date?: Date;
+    temperatureC?: number;
+    readonly temperatureF?: number;
+    summary?: string | undefined;
 }
 
 export class ApiException extends Error {
-  message: string;
-  status: number;
-  response: string;
-  headers: { [key: string]: any };
-  result: any;
+    message: string;
+    status: number;
+    response: string;
+    headers: { [key: string]: any; };
+    result: any;
 
-  constructor(message: string, status: number, response: string, headers: { [key: string]: any }, result: any) {
-    super();
+    constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
+        super();
 
-    this.message = message;
-    this.status = status;
-    this.response = response;
-    this.headers = headers;
-    this.result = result;
-  }
+        this.message = message;
+        this.status = status;
+        this.response = response;
+        this.headers = headers;
+        this.result = result;
+    }
 
-  protected isApiException = true;
+    protected isApiException = true;
 
-  static isApiException(obj: any): obj is ApiException {
-    return obj.isApiException === true;
-  }
+    static isApiException(obj: any): obj is ApiException {
+        return obj.isApiException === true;
+    }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any }, result?: any): any {
-  if (result !== null && result !== undefined) throw result;
-  else throw new ApiException(message, status, response, headers, null);
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+    if (result !== null && result !== undefined)
+        throw result;
+    else
+        throw new ApiException(message, status, response, headers, null);
 }
 
 function isAxiosError(obj: any | undefined): obj is AxiosError {
-  return obj && obj.isAxiosError === true;
+    return obj && obj.isAxiosError === true;
 }

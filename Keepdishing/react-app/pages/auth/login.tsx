@@ -8,7 +8,6 @@ import {
   FormControl,
   Input,
   Button,
-  Text,
   Switch,
   Container,
   Box,
@@ -16,6 +15,10 @@ import {
   VStack,
   Heading,
 } from "@chakra-ui/react";
+import api from "../../store/api/api";
+import { useRouter } from "next/router";
+import { PasswordField } from "../../components/PasswordField";
+import QueryErrorAlert from "../../components/QueryErrorAlert";
 
 const schema = z.object({
   email: z.string().email(),
@@ -23,37 +26,55 @@ const schema = z.object({
   rememberMe: z.boolean(),
 });
 
+type FormData = z.infer<typeof schema>;
+
 const Login = () => {
+  const router = useRouter();
+  const [login, error] = api.usePostApiAuthLogInMutation();
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    login({
+      loginInput: {
+        username: data.email,
+        password: data.password,
+        rememberMe: data.rememberMe,
+      },
+    })
+      .unwrap()
+      .then(() => router.push("/"));
   });
 
   return (
     <Container h="100vh">
       <Center w="full" h="full" flexDirection="column">
         <Heading mb={5}>Login</Heading>
+        <QueryErrorAlert error={error.error} />
         <Box w="full">
-          <form onSubmit={handleSubmit((d) => console.log(d))}>
+          <form onSubmit={onSubmit}>
             <VStack>
-              <FormControl isInvalid={errors.email}>
+              <FormControl isInvalid={errors.email != null}>
                 <FormLabel>Email</FormLabel>
                 <Input {...register("email")} />
                 <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={errors.password}>
+              <FormControl isInvalid={errors.password != null}>
                 <FormLabel>Password</FormLabel>
-                <Input {...register("password")} />
+                <PasswordField {...register("password")} />
                 <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
               </FormControl>
               <FormControl display="flex" alignItems="center">
                 <FormLabel htmlFor="rememberMe" mb="0">
                   Remember Me
                 </FormLabel>
-                <Switch {...register("rememberMe")} id="rememberMe" />
+                <Switch defaultChecked {...register("rememberMe")} id="rememberMe" />
               </FormControl>
             </VStack>
             <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
