@@ -1,14 +1,4 @@
-import {
-  FormControl,
-  FormLabel,
-  IconButton,
-  Input,
-  InputGroup,
-  InputProps,
-  InputRightElement,
-  useDisclosure,
-  useMergeRefs,
-} from "@chakra-ui/react";
+import { IconButton, Input, InputGroup, InputProps, InputRightElement, useDisclosure, useMergeRefs } from "@chakra-ui/react";
 import * as React from "react";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 
@@ -26,14 +16,6 @@ export const PasswordField = React.forwardRef<HTMLInputElement, InputProps>((pro
 
   return (
     <InputGroup>
-      <InputRightElement>
-        <IconButton
-          variant="link"
-          aria-label={isOpen ? "Mask password" : "Reveal password"}
-          icon={isOpen ? <HiEyeOff /> : <HiEye />}
-          onClick={onClickReveal}
-        />
-      </InputRightElement>
       <Input
         id="password"
         ref={mergeRef}
@@ -42,6 +24,15 @@ export const PasswordField = React.forwardRef<HTMLInputElement, InputProps>((pro
         autoComplete="current-password"
         {...props}
       />
+      <InputRightElement mr={6}>
+        <IconButton
+          variant="link"
+          aria-label={isOpen ? "Mask password" : "Reveal password"}
+          icon={isOpen ? <HiEyeOff /> : <HiEye />}
+          onClick={onClickReveal}
+          size="lg"
+        />
+      </InputRightElement>
     </InputGroup>
   );
 });

@@ -5,13 +5,20 @@ import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "../styles/theme";
 import { wrapper } from "../store/store";
+import { ReactElement, ReactNode } from "react";
+import { NextPage } from "next";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
-    </ChakraProvider>
-  );
+export type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+  return <ChakraProvider theme={theme}>{getLayout(<Component {...pageProps} />)}</ChakraProvider>;
 }
 
 export default wrapper.withRedux(MyApp);

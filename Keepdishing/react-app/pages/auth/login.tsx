@@ -40,16 +40,15 @@ const Login = () => {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = handleSubmit((data) => {
-    login({
+  const onSubmit = handleSubmit(async (data) => {
+    await login({
       loginInput: {
         username: data.email,
         password: data.password,
         rememberMe: data.rememberMe,
       },
-    })
-      .unwrap()
-      .then(() => router.push("/"));
+    }).unwrap();
+    return await router.push("/app");
   });
 
   return (
