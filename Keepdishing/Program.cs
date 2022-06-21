@@ -111,26 +111,12 @@ app.RunProxy(proxy => proxy.UseHttp(
     Environment.GetEnvironmentVariable("FRONTEND_URL"),
     builder =>
     {
-        builder.WithBeforeSend((c, hrm) =>
-        {
-            hrm.Headers.Add("Username", c.User.Identity.Name);
-            return Task.CompletedTask;
-        });
-
-        builder.WithAfterReceive((c, hrm) =>
-         {
-             hrm.Headers.Add("Username", "Test");
-             return Task.CompletedTask;
-         });
-
         builder.WithHandleFailure(async (c, e) =>
         {
-
             c.Response.StatusCode = 403;
             await c.Response.WriteAsync("Things borked.");
         });
     }
 ));
-
 
 app.Run();
