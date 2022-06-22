@@ -45,18 +45,6 @@ const Signup = () => {
 
   type FormData = z.infer<typeof schema>;
 
-  const errorSchema = z.object({
-    status: z.number(),
-    data: z.object({
-      succeeded: z.boolean(),
-      errors: z.array(z.object({ code: z.string(), description: z.string() })),
-    }),
-  });
-
-  const signupError = useMemo(() => {
-    return errorSchema.safeParse(error.error);
-  }, [error.error, errorSchema]);
-
   const {
     register,
     handleSubmit,
@@ -83,15 +71,7 @@ const Signup = () => {
       <Center w="full" h="full" flexDirection="column">
         <Heading mb={5}>Signup</Heading>
 
-        {signupError.success ? (
-          <Box my={3} bg="red.100" w="full" p={8}>
-            <UnorderedList w="full">
-              {signupError.data.data.errors.map((error) => (
-                <ListItem key={error.code}>{error.description}</ListItem>
-              ))}
-            </UnorderedList>
-          </Box>
-        ) : null}
+        <QueryErrorAlert error={error.error} />
 
         <Box w="full">
           <form onSubmit={onSubmit}>
