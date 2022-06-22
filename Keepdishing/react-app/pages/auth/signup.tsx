@@ -33,7 +33,7 @@ const Signup = () => {
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords don't match",
-      path: ["confirm"], // path of error
+      path: ["confirmPassword"], // path of error
     });
 
   type FormData = z.infer<typeof schema>;
@@ -44,6 +44,7 @@ const Signup = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    mode: "all",
   });
 
   const onSubmit = handleSubmit(async (data) => {
