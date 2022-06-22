@@ -10,6 +10,12 @@ import {
   FormErrorMessage,
   Switch,
   Button,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  UnorderedList,
+  ListItem,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +24,7 @@ import QueryErrorAlert from "../../components/QueryErrorAlert";
 import { zodResolver } from "@hookform/resolvers/zod";
 import api from "../../store/api/api";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 
 const Signup = () => {
   const router = useRouter();
@@ -38,13 +45,24 @@ const Signup = () => {
 
   type FormData = z.infer<typeof schema>;
 
+  const errorSchema = z.object({
+    status: z.number(),
+    data: z.object({
+      succeeded: z.boolean(),
+      errors: z.array(z.object({ code: z.string(), description: z.string() })),
+    }),
+  });
+
+  const signupError = useMemo(() => {
+    return errorSchema.safeParse(error.error);
+  }, [error.error, errorSchema]);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    mode: "all",
   });
 
   const onSubmit = handleSubmit(async (data) => {
@@ -64,6 +82,16 @@ const Signup = () => {
     <Container h="100vh">
       <Center w="full" h="full" flexDirection="column">
         <Heading mb={5}>Signup</Heading>
+
+        {signupError.success ? (
+          <Box my={3} bg="red.100" w="full" p={8}>
+            <UnorderedList w="full">
+              {signupError.data.data.errors.map((error) => (
+                <ListItem key={error.code}>{error.description}</ListItem>
+              ))}
+            </UnorderedList>
+          </Box>
+        ) : null}
 
         <Box w="full">
           <form onSubmit={onSubmit}>
