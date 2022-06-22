@@ -12,38 +12,55 @@ namespace Keepdishing.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
         [HttpPost("LogIn")]
-        [ProducesResponseType(typeof(ErrorResponse), 401)]
         public async Task<IActionResult> LogIn(LoginInput credentials)
         {
-            if (credentials.Username == null && credentials.Password == null) return StatusCode(401, new ErrorResponse("Email or Password cant be empty"));
-
             var result = await _signInManager.PasswordSignInAsync(credentials.Username, credentials.Password, credentials.RememberMe, false);
-            if (result.Succeeded)
-            {
-                return new JsonResult(result);
-            }
-            return StatusCode(401, new ErrorResponse("Invalid Login Details"));
-
+            return result.Succeeded ? Ok(result) : Unauthorized(new ErrorResponse("Invalid Login Details"));
         }
 
-        [HttpGet("GetCurrentUser")]
+        [HttpPost("SignUp")]
+        public async Task<IActionResult> SignUp(SignupUpInput signupUpInput)
+        {
+            var user = new ApplicationUser
+            {
+                Email = signupUpInput.Email,
+                UserName = signupUpInput.Email,
+                FirstName = signupUpInput.FirstName,
+                Surname = signupUpInput.Surname
+            };
+
+            var result = await _userManager.CreateAsync(user, signupUpInput.Password);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, true);
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+    
+
+    [HttpGet("GetCurrentUser")]
         public async Task<CurrentUser> GetCurrentUser() 
         {
             if (!User.Identity.IsAuthenticated) return null;
 
-            var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             return new CurrentUser
             {
+                Firstname = user.FirstName,
+                Surname = user.Surname,
                 UserName = user.UserName,
                 Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed
@@ -71,9 +88,32 @@ namespace Keepdishing.Controllers
 
     }
 
+    public record SignupUpInput
+    {
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string Surname { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        [Required]
+        public string ConfirmPassword { get; set; }
+    }
+
     public record CurrentUser
     {
+        [Required]
 
+        public string Firstname { get; init; }
+        [Required]
+
+        public string Surname { get; init; }
         [Required]
         public string UserName { get; init; }
 

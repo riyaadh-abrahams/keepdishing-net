@@ -21,6 +21,11 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Button,
 } from "@chakra-ui/react";
 import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
 import { IconType } from "react-icons";
@@ -34,6 +39,7 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [{ name: "Home", icon: FiHome }];
 
 export default function AppLayout({ children }: { children: ReactNode }) {
+  const auth = api.useGetApiAuthGetCurrentUserQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
@@ -51,8 +57,17 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
+
       <MobileNav onOpen={onOpen} />
+      {!auth.data?.emailConfirmed ? (
+        <Alert variant="left-accent" w={{ md: "calc(100vw - 15rem)" }} ml={{ base: 0, md: 60 }} status="info">
+          <AlertIcon />
+          <Flex pr={5} w="full" gap={5} justifyContent="space-between">
+            <Text>Your email is not verified. Please check your inbox. </Text>
+          </Flex>
+        </Alert>
+      ) : null}
+
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>

@@ -6,6 +6,7 @@ using dotenv.net;
 using Npgsql;
 using Serilog;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Keepdishing.Model;
 
 /**
  * Load environment variables from .env file
@@ -47,7 +48,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

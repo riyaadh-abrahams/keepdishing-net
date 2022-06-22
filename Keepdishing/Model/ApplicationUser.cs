@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Keepdishing.Model.Idenitity
+namespace Keepdishing.Model
 {
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public string FirstName { get; set; }
         public string Surname { get; set; }
-    } 
+    }
 }
