@@ -62,7 +62,7 @@ const Signup = () => {
   return (
     <Container h="100vh">
       <Center w="full" h="full" flexDirection="column">
-        <Heading mb={5}>Login</Heading>
+        <Heading mb={5}>Signup</Heading>
 
         <Box w="full">
           <form onSubmit={onSubmit}>
