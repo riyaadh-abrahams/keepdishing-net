@@ -57,6 +57,7 @@ namespace Keepdishing.Controllers
             if (!User.Identity.IsAuthenticated) return null;
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
             return new CurrentUser
             {
                 Firstname = user.FirstName,

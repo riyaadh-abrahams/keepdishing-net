@@ -16,6 +16,8 @@ import {
   AlertTitle,
   UnorderedList,
   ListItem,
+  HStack,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -76,16 +78,18 @@ const Signup = () => {
         <Box w="full">
           <form onSubmit={onSubmit}>
             <VStack>
-              <FormControl isInvalid={errors.firstName != null}>
-                <FormLabel>Name</FormLabel>
-                <Input {...register("firstName")} />
-                <FormErrorMessage>{errors.firstName && errors.firstName.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={errors.surname != null}>
-                <FormLabel>Surname</FormLabel>
-                <Input {...register("surname")} />
-                <FormErrorMessage>{errors.surname && errors.surname.message}</FormErrorMessage>
-              </FormControl>
+              <SimpleGrid gap={3} columns={2} w="full">
+                <FormControl isInvalid={errors.firstName != null}>
+                  <FormLabel>Name</FormLabel>
+                  <Input {...register("firstName")} />
+                  <FormErrorMessage>{errors.firstName && errors.firstName.message}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={errors.surname != null}>
+                  <FormLabel>Surname</FormLabel>
+                  <Input {...register("surname")} />
+                  <FormErrorMessage>{errors.surname && errors.surname.message}</FormErrorMessage>
+                </FormControl>
+              </SimpleGrid>
               <FormControl isInvalid={errors.email != null}>
                 <FormLabel>Email</FormLabel>
                 <Input {...register("email")} />

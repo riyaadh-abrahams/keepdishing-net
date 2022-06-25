@@ -15,6 +15,6 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
 const AppIndex: NextPageWithLayout = () => {
   return <div>Test</div>;
 };
-AppIndex.getLayout = (page) => <AppLayout>{page}</AppLayout>;
 
+AppIndex.getLayout = (page) => <AppLayout>{page}</AppLayout>;
 export default AppIndex;
