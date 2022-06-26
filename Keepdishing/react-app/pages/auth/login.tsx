@@ -56,15 +56,15 @@ const Login = () => {
   });
 
   return (
-    <Container h="100vh">
+    <Container pt={10}>
       <Center w="full" h="full" flexDirection="column">
-        <Image my={8} w="xs" src="/logo.svg" alt="logo" />
+        <Image w={["80%", "sm"]} mb={8} src="/logo.svg" alt="logo" />
         <Box bg="white" p={12} borderRadius="md" boxShadow="xl">
           <Heading mb={5}>Login</Heading>
           <QueryErrorAlert error={error.error} />
           <Box w="full">
             <form onSubmit={onSubmit}>
-              <VStack spacing={6}>
+              <VStack spacing={4}>
                 <FormControl isInvalid={errors.email != null}>
                   <FormLabel>Email</FormLabel>
                   <Input {...register("email")} autoComplete="email" />
@@ -90,7 +90,7 @@ const Login = () => {
                 </Flex>
               </VStack>
 
-              <Button fontFamily="Poppins" px={12} mt={16} isLoading={isSubmitting} type="submit">
+              <Button mt={16} isLoading={isSubmitting} type="submit">
                 Submit
               </Button>
             </form>
