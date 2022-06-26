@@ -827,6 +827,69 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@hypertheme-editor-pro/chakra-ui-radii@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.hyperthe.me/@hypertheme-editor-pro%2fchakra-ui-radii/-/chakra-ui-radii-0.1.5.tgz#b5f9fef59fe917704965cc9d6332a73998891ef7"
+  integrity sha512-Q1JIsevWVMmJfFvsh/63Rvkmvd/AVv+Hj5v4pSIIkvQaccoEl2ml1d2pRr8MZs9qL/828zZTzrktTtpEg33W7A==
+
+"@hypertheme-editor-pro/chakra-ui-shadows@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.hyperthe.me/@hypertheme-editor-pro%2fchakra-ui-shadows/-/chakra-ui-shadows-0.1.5.tgz#fb2fb7cf266d7d7b8de4490b001e4b6a5967fe61"
+  integrity sha512-UQ0HgPqRxMZVwxEl7fk4iwZDTsxjI7yV5WyKWjc1l/rD5cENocQMh7mqLx+W9+YmKIZUQedGodnyF5lYQTnfow==
+
+"@hypertheme-editor-pro/chakra-ui-spaces@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.hyperthe.me/@hypertheme-editor-pro%2fchakra-ui-spaces/-/chakra-ui-spaces-0.1.5.tgz#8cc770379db3f45b54e91f15faedf711cfe705f2"
+  integrity sha512-UD/IrPi7stPcLhZ+glaSJtzcF26Vm9YNQ+/LYAw2GHP+jGZrRnPsRrhHh1KJmnLjBKli98oRqiWzEAo5v/X2gg==
+
+"@hypertheme-editor-pro/chakra-ui-typography@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.hyperthe.me/@hypertheme-editor-pro%2fchakra-ui-typography/-/chakra-ui-typography-0.1.5.tgz#8a342f38fe10c0786b5ea8e9fd3d92e96a8ad6af"
+  integrity sha512-ealmKXA1RnmlrC2RWz876WbmLJJ2uvZMmOx15TtKWHVtAEOZTn6+fX+gdRVK7L30mUui4QTMQ0Oc5HsLktl5dg==
+
+"@hypertheme-editor-pro/chakra-ui@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.hyperthe.me/@hypertheme-editor-pro%2fchakra-ui/-/chakra-ui-0.1.5.tgz#da22e8c8d80797c9df8276aa0cc1bd9d0945d927"
+  integrity sha512-yX8dWKsrzoSch/GQioLjInuWxpq28ejJC4Cgwympe+sbV/FWn8bgLc7cT5O2X3blx2m470iO4cswsQtA1eSZqw==
+  dependencies:
+    "@hypertheme-editor-pro/chakra-ui-radii" "^0.1.5"
+    "@hypertheme-editor-pro/chakra-ui-shadows" "^0.1.5"
+    "@hypertheme-editor-pro/chakra-ui-spaces" "^0.1.5"
+    "@hypertheme-editor-pro/chakra-ui-typography" "^0.1.5"
+    "@hypertheme-editor/chakra-ui-colors" "^0.1.5"
+    "@hypertheme-editor/chakra-ui-core" "^0.1.5"
+    "@hypertheme-editor/chakra-ui-font-sizes" "^0.1.5"
+    immer "^9.0.6"
+    react-icons "^4.2.0"
+    recoil "^0.4.1"
+    use-debouncy "^4.2.0"
+
+"@hypertheme-editor/chakra-ui-colors@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@hypertheme-editor/chakra-ui-colors/-/chakra-ui-colors-0.1.5.tgz#368f1d14ea430553f66361e842b8373de26e6b5e"
+  integrity sha512-+BqxFPmpHEX38eDEBw7NeYv40xXZsHagEorhPI9DxaVlPoBkZcaTOcojIAad/+WNRNQtEIsZ2sk6E4UMIPbFJQ==
+  dependencies:
+    colord "^2.1.0"
+    react-colorful "^5.2.3"
+
+"@hypertheme-editor/chakra-ui-core@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@hypertheme-editor/chakra-ui-core/-/chakra-ui-core-0.1.5.tgz#39cc1cc2d6b24cde8cae1e05f32db66def2c37eb"
+  integrity sha512-Apts51/aWAYMH28SBpgNbzAAvxg44jGseJWQTkDoxEcGcZgAFjUD49FdxxX3GGZn57yNrLIKkCQ2WNDbSZecGw==
+  dependencies:
+    "@hypertheme-editor/chakra-ui-theme" "^0.1.5"
+    react-google-font-loader "^1.1.0"
+
+"@hypertheme-editor/chakra-ui-font-sizes@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@hypertheme-editor/chakra-ui-font-sizes/-/chakra-ui-font-sizes-0.1.5.tgz#b085247a95736310a0854d2d54a0fc3724e37134"
+  integrity sha512-5zJLHC2Cmchmj/DJqO3a7NHg/JbMQ932ozDSjBEj0X8UjOLyUit8B1ypfKTwAb7CJjkbuk+XVmgqBzFEDvzYhg==
+
+"@hypertheme-editor/chakra-ui-theme@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@hypertheme-editor/chakra-ui-theme/-/chakra-ui-theme-0.1.5.tgz#42c18ea9ada6f3be80621bd918611c031fc4a1a8"
+  integrity sha512-MEPLGzuU2ihgHcxZEj0/jpuKJDJ+jv+/VaXhQR83ehP0HHu5VdK8TSIhoEL1NA2sUe4XsvxmEUs6bFUw1JxoYw==
+
 "@jridgewell/resolve-uri@^3.0.3":
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-3.0.7.tgz#30cd49820a962aff48c8fffc5cd760151fca61fe"
@@ -1393,6 +1456,11 @@ color@^3.1.3:
   dependencies:
     color-convert "^1.9.3"
     color-string "^1.6.0"
+
+colord@^2.1.0:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/colord/-/colord-2.9.2.tgz#25e2bacbbaa65991422c07ea209e2089428effb1"
+  integrity sha512-Uqbg+J445nc1TKn4FoDPS6ZZqAvEDnwrH42yo8B40JSOgSLxMZ/gt3h4nmCtPLQeXhjJJkqBx7SCY35WnIixaQ==
 
 colorspace@1.1.x:
   version "1.1.4"
@@ -2148,6 +2216,11 @@ globby@^11.1.0:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
+hamt_plus@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/hamt_plus/-/hamt_plus-1.0.2.tgz#e21c252968c7e33b20f6a1b094cd85787a265601"
+  integrity sha512-t2JXKaehnMb9paaYA7J0BX8QQAY8lwfQ9Gjf4pg/mk4krt+cmwmU652HOoWonf+7+EQV97ARPMhhVgU1ra2GhA==
+
 has-bigints@^1.0.1, has-bigints@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/has-bigints/-/has-bigints-1.0.2.tgz#0871bd3e3d51626f6ca0966668ba35d5602d6eaa"
@@ -2211,7 +2284,7 @@ ignore@^5.2.0:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.0.tgz#6d3bac8fa7fe0d45d9f9be7bac2fc279577e345a"
   integrity sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==
 
-immer@^9.0.7:
+immer@^9.0.6, immer@^9.0.7:
   version "9.0.15"
   resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.15.tgz#0b9169e5b1d22137aba7d43f8a81a495dd1b62dc"
   integrity sha512-2eB/sswms9AEUSkOm4SbV5Y7Vmt/bKRwByd52jfLkW4OLYeaTP3EEiJ9agqU0O/tq6Dk62Zfj+TJSqfm1rLVGQ==
@@ -2969,6 +3042,11 @@ react-clientside-effect@^1.2.6:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
+react-colorful@^5.2.3:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.5.1.tgz#29d9c4e496f2ca784dd2bb5053a3a4340cfaf784"
+  integrity sha512-M1TJH2X3RXEt12sWkpa6hLc/bbYS0H6F4rIqjQZ+RxNBstpY67d9TrFXtqdZwhpmBXcCwEi7stKqFue3ZRkiOg==
+
 react-dom@18.1.0:
   version "18.1.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.1.0.tgz#7f6dd84b706408adde05e1df575b3a024d7e8a2f"
@@ -2994,12 +3072,19 @@ react-focus-lock@^2.9.1:
     use-callback-ref "^1.3.0"
     use-sidecar "^1.1.2"
 
+react-google-font-loader@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-google-font-loader/-/react-google-font-loader-1.1.0.tgz#9c9ae97aae3d2177e922c9bf4ab6312b903abc79"
+  integrity sha512-mnPYxBdhYEldTtREYPKllbmMvCGkTbpdmNjR6iTM3eTNWcg17OrfXjq9HRDZe+1+mhnUnI/AOcpvG0LIQPcLIw==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-hook-form@^7.32.2:
   version "7.32.2"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.32.2.tgz#58ec2ab0239ce97969baa2faa03ced13fae913ac"
   integrity sha512-F1A6n762xaRhvtQH5SkQQhMr19cCkHZYesTcKJJeNmrphiZp/cYFTIzC05FnQry0SspM54oPJ9tXFXlzya8VNQ==
 
-react-icons@^4.4.0:
+react-icons@^4.2.0, react-icons@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.4.0.tgz#a13a8a20c254854e1ec9aecef28a95cdf24ef703"
   integrity sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==
@@ -3074,6 +3159,13 @@ real-require@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/real-require/-/real-require-0.1.0.tgz#736ac214caa20632847b7ca8c1056a0767df9381"
   integrity sha512-r/H9MzAWtrv8aSVjPCMFpDMl5q66GqtmmRkRjpHTsp4zBAa+snZyiQNlMONiUmEJcsnaw0wCauJ2GWODr/aFkg==
+
+recoil@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.4.1.tgz#1cb2171bc98d41361507131a059d7c3525d8c4fe"
+  integrity sha512-vp6KPwlHOjJ4bJofmdDchmgI9ilMTCoUisK8/WYLl8dThH7e7KmtZttiLgvDb2Em99dUfTEsk8vT8L1nUMgqXQ==
+  dependencies:
+    hamt_plus "1.0.2"
 
 redux-thunk@^2.4.1:
   version "2.4.1"
@@ -3574,6 +3666,11 @@ use-callback-ref@^1.3.0:
   integrity sha512-3FT9PRuRdbB9HfXhEq35u4oZkvpJ5kuYbpqhCfmiZyReuRgpnhDlbr2ZEnnuS0RrJAPn6l23xjFg9kpDM+Ms7w==
   dependencies:
     tslib "^2.0.0"
+
+use-debouncy@^4.2.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/use-debouncy/-/use-debouncy-4.3.0.tgz#52476d903254fbdb7c2ab01ae5708381bba914e0"
+  integrity sha512-9wJtM/RS57Bw8MIltmCjVPdpv8CqtzcNauS2Nh1/FLQrPHoJrUnslaU1cvBcJoFxp5TCw9T/09YdeilxdAZSlw==
 
 use-sidecar@^1.1.2:
   version "1.1.2"

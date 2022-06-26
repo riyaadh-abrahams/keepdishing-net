@@ -1,4 +1,5 @@
 ﻿using Keepdishing.Model;
+using Keepdishing.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +15,13 @@ namespace Keepdishing.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailService _emailService;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         [HttpPost("LogIn")]
@@ -44,6 +47,7 @@ namespace Keepdishing.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, true);
+                await _emailService.SendEmail();
                 return Ok(result);
             }
 
