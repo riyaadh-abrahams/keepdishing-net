@@ -1,6 +1,5 @@
-import { ComponentSingleStyleConfig } from "@chakra-ui/react";
+import { ComponentMultiStyleConfig, ComponentSingleStyleConfig } from "@chakra-ui/react";
 
-//shadow="md" fontFamily="Poppins" px={12}
 export const Button: ComponentSingleStyleConfig = {
   baseStyle: {
     fontWeight: "semibold",
@@ -11,20 +10,43 @@ export const Button: ComponentSingleStyleConfig = {
       px: 12,
       py: 6,
       shadow: "md",
-      backgroundColor: "brand.ocean",
       color: "white",
-      _hover: {
-        backgroundColor: "blue.800",
-      },
-      _focus: {
-        backgroundColor: "blue.800",
-      },
     },
+  },
+  defaultProps: {
+    colorScheme: "blue",
+  },
+};
+
+export const Link: ComponentSingleStyleConfig = {
+  baseStyle: {
+    fontWeight: "semibold",
+    color: "brand.link",
+  },
+};
+
+export const Input: ComponentMultiStyleConfig = {
+  parts: ["field", "element", "addon"],
+  baseStyle: {
+    field: {
+      py: 6,
+    },
+    element: {
+      py: 6,
+    },
+    addon: {
+      py: 6,
+    },
+  },
+  defaultProps: {
+    focusBorderColor: "brand.ocean",
   },
 };
 
 const components = {
   Button,
+  Link,
+  Input,
 };
 
 export default components;

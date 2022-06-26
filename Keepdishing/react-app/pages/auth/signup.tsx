@@ -2,6 +2,7 @@ import {
   Container,
   Center,
   Heading,
+  Text,
   Box,
   VStack,
   FormControl,
@@ -18,6 +19,8 @@ import {
   ListItem,
   HStack,
   SimpleGrid,
+  Flex,
+  Link,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,6 +30,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import api from "../../store/api/api";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import AuthLayout from "../../layouts/AuthLayout";
+import NextLink from "next/link";
 
 const Signup = () => {
   const router = useRouter();
@@ -69,16 +74,14 @@ const Signup = () => {
   });
 
   return (
-    <Container h="100vh">
-      <Center w="full" h="full" flexDirection="column">
+    <AuthLayout>
+      <VStack spacing={8}>
         <Heading mb={5}>Signup</Heading>
-
         <QueryErrorAlert error={error.error} />
-
         <Box w="full">
           <form onSubmit={onSubmit}>
-            <VStack>
-              <SimpleGrid gap={3} columns={2} w="full">
+            <VStack spacing={4}>
+              <SimpleGrid gap={3} columns={[1, 2]} w="full">
                 <FormControl isInvalid={errors.firstName != null}>
                   <FormLabel>Name</FormLabel>
                   <Input {...register("firstName")} />
@@ -106,13 +109,25 @@ const Signup = () => {
                 <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
               </FormControl>
             </VStack>
-            <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
-              Submit
-            </Button>
+            <Flex mt={8} justifyContent="flex-end">
+              <Button w="full" isLoading={isSubmitting} type="submit">
+                Sign Up
+              </Button>
+            </Flex>
           </form>
         </Box>
-      </Center>
-    </Container>
+        <Center>
+          <Text>
+            Already have an account?{" "}
+            <NextLink href="/auth/login" passHref>
+              <Link ml="1" textAlign="end" w="full">
+                Log In
+              </Link>
+            </NextLink>
+          </Text>
+        </Center>
+      </VStack>
+    </AuthLayout>
   );
 };
 
