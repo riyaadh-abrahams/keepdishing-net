@@ -56,11 +56,11 @@ const Login = () => {
   });
 
   return (
-    <Container pt={10}>
+    <Container pt={[10, 20]}>
       <Center w="full" h="full" flexDirection="column">
         <Image w={["80%", "sm"]} mb={8} src="/logo.svg" alt="logo" />
         <Box bg="white" p={12} borderRadius="md" boxShadow="xl">
-          <Heading mb={5}>Login</Heading>
+          <Heading mb={8}>Login</Heading>
           <QueryErrorAlert error={error.error} />
           <Box w="full">
             <form onSubmit={onSubmit}>
@@ -83,15 +83,15 @@ const Login = () => {
                     <Switch colorScheme="blue" defaultChecked {...register("rememberMe")} id="rememberMe" />
                   </FormControl>
                   <NextLink href="/auth/signup" passHref>
-                    <Link fontWeight="bold" color="brand.link">
-                      Register
+                    <Link textAlign="end" w="full" fontWeight="bold" color="brand.link">
+                      Forgot Password
                     </Link>
                   </NextLink>
                 </Flex>
               </VStack>
 
-              <Button mt={16} isLoading={isSubmitting} type="submit">
-                Submit
+              <Button w="full" mt={10} isLoading={isSubmitting} type="submit">
+                Log in
               </Button>
             </form>
           </Box>

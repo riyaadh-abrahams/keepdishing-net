@@ -9,6 +9,7 @@ export const Button: ComponentSingleStyleConfig = {
   variants: {
     solid: {
       px: 12,
+      py: 6,
       shadow: "md",
       backgroundColor: "brand.ocean",
       color: "white",
