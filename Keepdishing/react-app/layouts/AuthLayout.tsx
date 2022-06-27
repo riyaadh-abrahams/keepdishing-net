@@ -1,4 +1,4 @@
-import { Center, Box, Container, Image } from "@chakra-ui/react";
+import { Center, Box, Container, Image, VStack } from "@chakra-ui/react";
 import NextLink from "next/link";
 
 type AuthLayoutProps = {
@@ -6,16 +6,18 @@ type AuthLayoutProps = {
 };
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <Container pt={10}>
-      <Center w="full" h="full" flexDirection="column">
-        <NextLink href="/">
-          <Image cursor="pointer" w={"15em"} mb={8} src="/logo.svg" alt="logo" />
-        </NextLink>
-        <Box bg="white" p={12} borderRadius="lg" boxShadow="xl">
-          {children}
-        </Box>
-      </Center>
-    </Container>
+    <>
+      <Box bg={["white", "inherit"]} py={16}>
+        <VStack spacing={[2, 6]} flexDirection="column">
+          <NextLink href="/">
+            <Image cursor="pointer" w={"15em"} src="/logo.svg" alt="logo" />
+          </NextLink>
+          <Box w={["full", "xl"]} bg="white" p={[6, 12]} borderRadius="lg" boxShadow={["none", "xl"]}>
+            {children}
+          </Box>
+        </VStack>
+      </Box>
+    </>
   );
 };
 

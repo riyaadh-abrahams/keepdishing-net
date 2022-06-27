@@ -64,7 +64,6 @@ const Login = () => {
         <title>Keepdishing | Login</title>
       </Head>
       <AuthLayout>
-        {" "}
         <VStack spacing={8}>
           <Heading>Login</Heading>
           <QueryErrorAlert error={error.error} />

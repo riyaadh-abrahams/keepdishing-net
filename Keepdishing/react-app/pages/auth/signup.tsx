@@ -32,6 +32,7 @@ import { useRouter } from "next/router";
 import { useMemo } from "react";
 import AuthLayout from "../../layouts/AuthLayout";
 import NextLink from "next/link";
+import Head from "next/head";
 
 const Signup = () => {
   const router = useRouter();
@@ -74,60 +75,65 @@ const Signup = () => {
   });
 
   return (
-    <AuthLayout>
-      <VStack spacing={8}>
-        <Heading mb={5}>Signup</Heading>
-        <QueryErrorAlert error={error.error} />
-        <Box w="full">
-          <form onSubmit={onSubmit}>
-            <VStack spacing={4}>
-              <SimpleGrid gap={3} columns={[1, 2]} w="full">
-                <FormControl isInvalid={errors.firstName != null}>
-                  <FormLabel>Name</FormLabel>
-                  <Input {...register("firstName")} />
-                  <FormErrorMessage>{errors.firstName && errors.firstName.message}</FormErrorMessage>
+    <>
+      <Head>
+        <title>Keepdishing | Register</title>
+      </Head>
+      <AuthLayout>
+        <VStack spacing={8}>
+          <Heading>Signup</Heading>
+          <QueryErrorAlert error={error.error} />
+          <Box w="full">
+            <form onSubmit={onSubmit}>
+              <VStack spacing={4}>
+                <SimpleGrid gap={3} columns={[1, 2]} w="full">
+                  <FormControl isInvalid={errors.firstName != null}>
+                    <FormLabel>Name</FormLabel>
+                    <Input {...register("firstName")} />
+                    <FormErrorMessage>{errors.firstName && errors.firstName.message}</FormErrorMessage>
+                  </FormControl>
+                  <FormControl isInvalid={errors.surname != null}>
+                    <FormLabel>Surname</FormLabel>
+                    <Input {...register("surname")} />
+                    <FormErrorMessage>{errors.surname && errors.surname.message}</FormErrorMessage>
+                  </FormControl>
+                </SimpleGrid>
+                <FormControl isInvalid={errors.email != null}>
+                  <FormLabel>Email</FormLabel>
+                  <Input {...register("email")} />
+                  <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
                 </FormControl>
-                <FormControl isInvalid={errors.surname != null}>
-                  <FormLabel>Surname</FormLabel>
-                  <Input {...register("surname")} />
-                  <FormErrorMessage>{errors.surname && errors.surname.message}</FormErrorMessage>
+                <FormControl isInvalid={errors.password != null}>
+                  <FormLabel>Password</FormLabel>
+                  <PasswordField {...register("password")} />
+                  <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
                 </FormControl>
-              </SimpleGrid>
-              <FormControl isInvalid={errors.email != null}>
-                <FormLabel>Email</FormLabel>
-                <Input {...register("email")} />
-                <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={errors.password != null}>
-                <FormLabel>Password</FormLabel>
-                <PasswordField {...register("password")} />
-                <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={errors.confirmPassword != null}>
-                <FormLabel>Confirm Password</FormLabel>
-                <PasswordField {...register("confirmPassword")} />
-                <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
-              </FormControl>
-            </VStack>
-            <Flex mt={8} justifyContent="flex-end">
-              <Button w="full" isLoading={isSubmitting} type="submit">
-                Sign Up
-              </Button>
-            </Flex>
-          </form>
-        </Box>
-        <Center>
-          <Text>
-            Already have an account?{" "}
-            <NextLink href="/auth/login" passHref>
-              <Link ml="1" textAlign="end" w="full">
-                Log In
-              </Link>
-            </NextLink>
-          </Text>
-        </Center>
-      </VStack>
-    </AuthLayout>
+                <FormControl isInvalid={errors.confirmPassword != null}>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <PasswordField {...register("confirmPassword")} />
+                  <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
+                </FormControl>
+              </VStack>
+              <Flex mt={8} justifyContent="flex-end">
+                <Button w="full" isLoading={isSubmitting} type="submit">
+                  Sign Up
+                </Button>
+              </Flex>
+            </form>
+          </Box>
+          <Center>
+            <Text>
+              Already have an account?{" "}
+              <NextLink href="/auth/login" passHref>
+                <Link ml="1" textAlign="end" w="full">
+                  Log In
+                </Link>
+              </NextLink>
+            </Text>
+          </Center>
+        </VStack>
+      </AuthLayout>
+    </>
   );
 };
 
