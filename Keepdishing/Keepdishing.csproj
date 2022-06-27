@@ -12,6 +12,10 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.Proxy" Version="4.4.0" />
     <PackageReference Include="dotenv.net" Version="3.1.1" />
+    <PackageReference Include="FluentEmail.Liquid" Version="3.0.2" />
+    <PackageReference Include="FluentEmail.Mailtrap" Version="2.7.0" />
+    <PackageReference Include="FluentEmail.SendGrid" Version="3.0.2" />
+    <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
@@ -43,5 +47,16 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+<ItemGroup>
+	<Content Include="Liquid\*.*">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</Content>
+</ItemGroup>
+
+<ItemGroup>
+  <None Remove="Liquid\test.liquid" />
+</ItemGroup>
+
 
 </Project>

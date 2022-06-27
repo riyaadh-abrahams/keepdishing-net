@@ -46,8 +46,10 @@ namespace Keepdishing.Controllers
 
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, true);
+                var confirmEmail = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 await _emailService.SendEmail();
+
+                await _signInManager.SignInAsync(user, true);
                 return Ok(result);
             }
 

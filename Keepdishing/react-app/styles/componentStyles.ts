@@ -14,7 +14,7 @@ export const Button: ComponentSingleStyleConfig = {
     },
   },
   defaultProps: {
-    colorScheme: "blue",
+    colorScheme: "oceanBlue",
   },
 };
 

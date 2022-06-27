@@ -8,11 +8,17 @@ using Serilog;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Keepdishing.Model;
 using Keepdishing.Services;
+using Microsoft.Extensions.FileProviders;
 
 /**
  * Load environment variables from .env file
  */
 DotEnv.Load();
+
+var emailSender = Environment.GetEnvironmentVariable("EMAIL_SENDER"); ///////////
+var sendgridApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY"); ////
+var mailTrapUser = Environment.GetEnvironmentVariable("MAIL_TRAP_USER"); ////////
+var mailTrapPass = Environment.GetEnvironmentVariable("MAIL_TRAP_PASS"); ////////
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +61,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddProxies();
+
+builder.Services.AddFluentEmail(emailSender, "Keepdishing").AddLiquidRenderer(options =>
+{
+    options.FileProvider = new PhysicalFileProvider
+    (
+        Path.Combine(AppContext.BaseDirectory, "Liquid")
+    );
+
+}).AddMailtrapSender(mailTrapUser, mailTrapPass, "smtp.mailtrap.io");
+//.AddSendGridSender(sendgridApiKey);
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 

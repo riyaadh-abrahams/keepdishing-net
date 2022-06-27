@@ -60,7 +60,13 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
       <MobileNav onOpen={onOpen} />
       {!auth.data?.emailConfirmed ? (
-        <Alert variant="left-accent" w={{ md: "calc(100vw - 15rem)" }} ml={{ base: 0, md: 60 }} status="info">
+        <Alert
+          variant="left-accent"
+          w={{ md: "calc(100vw - 15rem)" }}
+          ml={{ base: 0, md: 60 }}
+          status="warning"
+          colorScheme="linkedin"
+        >
           <AlertIcon />
           <Flex pr={5} w="full" gap={5} justifyContent="space-between">
             <Text>Your email is not verified. Please check your inbox. </Text>

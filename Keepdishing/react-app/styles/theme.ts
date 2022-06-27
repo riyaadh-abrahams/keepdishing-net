@@ -8,7 +8,7 @@ const colors = {
     paper: "#F5F2F7",
     link: "#007bff",
   },
-  blue: {
+  oceanBlue: {
     "50": "#6692ff",
     "100": "#003ac6",
     "200": "#002fa0",
