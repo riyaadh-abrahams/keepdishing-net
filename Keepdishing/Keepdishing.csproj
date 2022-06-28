@@ -49,7 +49,7 @@
   </ItemGroup>
 
 <ItemGroup>
-	<Content Include="Liquid\*.*">
+	<Content Include="Emails\dist\*.*">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Content>
 </ItemGroup>

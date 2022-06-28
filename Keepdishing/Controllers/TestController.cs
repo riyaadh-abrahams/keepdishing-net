@@ -19,10 +19,11 @@ namespace Keepdishing.Controllers
         [HttpGet("TestEmail")]
         public async Task<IActionResult> TestEmail()
         {
+            var file = Path.Combine(AppContext.BaseDirectory, "Emails", "dist", "confirmation.html");
             var result = await _fluentEmail
                 .To("riyaadh.abr@gmail.com")
                 .Subject("Test")
-                .UsingTemplateFromFile(Path.Combine(AppContext.BaseDirectory, "Liquid", "test.liquid"), new { Name = "Luke", Compliment = "Awesome" })
+                .UsingTemplateFromFile(file, new { ConfirmationURL = "Luke" })
                 .Tag("Test")
                 .SendAsync();
 
