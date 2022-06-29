@@ -23,7 +23,7 @@ namespace Keepdishing.Controllers
             var result = await _fluentEmail
                 .To("riyaadh.abr@gmail.com")
                 .Subject("Test")
-                .UsingTemplateFromFile(file, new { ConfirmationURL = "Luke" })
+                .UsingTemplateFromFile(file, new { ConfirmationURL = "Luke", SiteUrl=Environment.GetEnvironmentVariable("SITE_URL") })
                 .Tag("Test")
                 .SendAsync();
 

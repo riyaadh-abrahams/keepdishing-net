@@ -69,7 +69,8 @@ builder.Services.AddFluentEmail(emailSender, "Keepdishing").AddLiquidRenderer(op
         Path.Combine(AppContext.BaseDirectory, "Liquid")
     );
 
-}).AddMailtrapSender(mailTrapUser, mailTrapPass, "smtp.mailtrap.io");
+}).AddSmtpSender("localhost", 1025);
+//.AddMailtrapSender(mailTrapUser, mailTrapPass, "smtp.mailtrap.io");
 //.AddSendGridSender(sendgridApiKey);
 
 builder.Services.AddScoped<IEmailService, EmailService>();
