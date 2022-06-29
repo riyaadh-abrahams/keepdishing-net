@@ -18,23 +18,18 @@ bodyClass: bg-gray-200
               <td align="center" class="px-4">
                 <table class="w-160 sm:w-full">
                   <tr>
-
                     <td class="bg-white shadow-lg rounded-lg p-12 sm:px-6 text-center">
                       <h1 class="font-bold text-black text-4xl sm:text-xl">{{page.title}}</h1>
-
                       <p class="text-gray-700 text-base">Follow this link to confirm your account:</p>
                       <div class="leading-6 sm:h-8">&zwnj;</div>
                       <a
                         href="@{{ ConfirmationURL }}"
-                        class="inline-block py-5 px-6 text-sm leading-none [text-decoration:none] text-white font-semibold uppercase rounded bg-ocean hover:bg-ocean-hover">
+                        class="shadow-lg inline-block py-5 px-12 text-md leading-none [text-decoration:none] text-white font-semibold rounded-md bg-ocean hover:bg-ocean-hover">
                         <!--[if mso]><i style="letter-spacing: 24px; mso-font-width: -100%; mso-text-raise: 26pt;">&nbsp;</i><![endif]-->
                           <span>Confirm your email &rarr;</span>
                         <!--[if mso]><i style="letter-spacing: 24px; mso-font-width: -100%;">&nbsp;</i><![endif]-->
                       </a>
                     </td>
-                  </tr>
-                  <tr>
-                    <td class="h-0.5 bg-gray-300"></td>
                   </tr>
                   <component src="src/components/footer.html"></component>
                 </table>
