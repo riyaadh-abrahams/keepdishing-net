@@ -54,9 +54,5 @@
 	</Content>
 </ItemGroup>
 
-<ItemGroup>
-  <None Remove="Liquid\test.liquid" />
-</ItemGroup>
-
 
 </Project>

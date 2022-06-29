@@ -1,10 +1,20 @@
 module.exports = {
   theme: {
+
     screens: {
       xs: {max: '425px'},
       sm: {max: '600px'},
     },
     extend: {
+      colors: {
+        ocean: {
+          DEFAULT: "#000e2e",
+          hover: "#001954"
+        },
+        fire: "#ff4a4a",
+        paper: "#F5F2F7",
+        link: "#007bff",
+      },
       spacing: {
         screen: '100vw',
         full: '100%',
@@ -100,7 +110,7 @@ module.exports = {
         inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
       },
       fontFamily: {
-        sans: ['ui-sans-serif', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
+        sans: ['Poppins','ui-sans-serif', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
         serif: ['ui-serif', 'Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
         mono: ['ui-monospace', 'Menlo', 'Consolas', 'monospace'],
       },
