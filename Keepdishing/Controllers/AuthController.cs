@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace Keepdishing.Controllers
 {
@@ -46,8 +48,9 @@ namespace Keepdishing.Controllers
 
             if (result.Succeeded)
             {
-                var confirmEmail = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                await _emailService.SendEmail();
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token, email = user.Email }, Request.Scheme);
+                await _emailService.SendEmailConfirmation(confirmationLink);
 
                 await _signInManager.SignInAsync(user, true);
                 return Ok(result);
@@ -80,6 +83,16 @@ namespace Keepdishing.Controllers
         {
             await _signInManager.SignOutAsync();
             return Ok();
+        }
+
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return NotFound();
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return result.Succeeded ? Ok() : BadRequest(); 
         }
     }
 

@@ -55,7 +55,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.Services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -142,9 +144,9 @@ app.RunProxy(proxy => proxy.UseHttp(
     Environment.GetEnvironmentVariable("FRONTEND_URL"),
     builder =>
     {
-        builder.WithHandleFailure(async (c, e) =>
-        {
+        builder.WithHandleFailure((c, e) => {
             c.Response.Redirect("/Error");
+            return Task.CompletedTask;
         });
     }
 ));

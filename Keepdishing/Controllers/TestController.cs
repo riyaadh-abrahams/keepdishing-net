@@ -20,6 +20,7 @@ namespace Keepdishing.Controllers
         public async Task<IActionResult> TestEmail()
         {
             var file = Path.Combine(AppContext.BaseDirectory, "Emails", "dist", "confirmation.html");
+
             var result = await _fluentEmail
                 .To("riyaadh.abr@gmail.com")
                 .Subject("Test")
