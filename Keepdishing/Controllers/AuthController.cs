@@ -49,7 +49,7 @@ namespace Keepdishing.Controllers
             if (result.Succeeded)
             {
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var confirmationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token, email = user.Email }, Request.Scheme);
+                var confirmationLink = Url.Action("ConfirmEmail", "Auth", new { token, email = user.Email }, Request.Scheme);
                 await _emailService.SendEmailConfirmation(confirmationLink);
 
                 await _signInManager.SignInAsync(user, true);
@@ -88,11 +88,12 @@ namespace Keepdishing.Controllers
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string token, string email)
         {
+            
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null) return NotFound();
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
-            return result.Succeeded ? Ok() : BadRequest(); 
+            return result.Succeeded ? Redirect("/app") : BadRequest(); 
         }
     }
 
