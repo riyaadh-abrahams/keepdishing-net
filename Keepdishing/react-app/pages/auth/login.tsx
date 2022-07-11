@@ -42,6 +42,7 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -87,11 +88,18 @@ const Login = () => {
                     </FormLabel>
                     <Switch colorScheme="red" defaultChecked {...register("rememberMe")} id="rememberMe" />
                   </FormControl>
-                  <NextLink href="/auth/forgot-password" passHref>
-                    <Link textAlign="end" w="full">
-                      Forgot Password
-                    </Link>
-                  </NextLink>
+                  <Link
+                    onClick={() => {
+                      router.push({
+                        pathname: "/auth/forgot-password",
+                        query: { email: getValues("email") },
+                      });
+                    }}
+                    textAlign="end"
+                    w="full"
+                  >
+                    Forgot Password
+                  </Link>
                 </Flex>
               </VStack>
               <Button my={10} w="full" isLoading={isSubmitting} type="submit">
@@ -100,7 +108,7 @@ const Login = () => {
             </form>
             <Center>
               <Text>
-                Need an Account?{" "}
+                Need an Account?
                 <NextLink href="/auth/signup" passHref>
                   <Link ml="1" textAlign="end" w="full">
                     Sign Up
