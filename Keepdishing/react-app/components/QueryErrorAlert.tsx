@@ -47,7 +47,7 @@ type QueryErrorAlertProps = {
 const QueryErrorAlert = ({ error }: QueryErrorAlertProps) => {
   const problemDetailsError = problemDetailsErrorSchema.safeParse(error);
   return (
-    <Box>
+    <Box w="full">
       <SingleErrorAlert error={error} />
       <SignupQueryErrorAlert error={error} />
       <ProblemDetailsErrorAlert error={error} />

@@ -116,7 +116,8 @@ namespace Keepdishing.Controllers
         [HttpGet("ConfirmForgotPassword")]
         public RedirectResult ConfirmForgotPassword(string token, string email)
         {
-            return Redirect("/auth/reset-password");
+            var queryString = Request.QueryString;
+            return Redirect("/auth/reset-password" + queryString);
         }
 
         [HttpPost("ResetPassword")]
