@@ -100,9 +100,9 @@ namespace Keepdishing.Controllers
         public async Task<IActionResult> ForgotPassword(ForgotPasswordInput forgotPasswordInput)
         {
             var user = await _userManager.FindByEmailAsync(forgotPasswordInput.Email);
-            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+            if (user == null)
             {
-                return Ok();
+                return NotFound(new ErrorResponse("No user with this email exists"));
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -114,7 +114,7 @@ namespace Keepdishing.Controllers
         }
 
         [HttpGet("ConfirmForgotPassword")]
-        public RedirectResult ConfirmForgotPassword(string token, string email)
+        public RedirectResult ConfirmForgotPassword()
         {
             var queryString = Request.QueryString;
             return Redirect("/auth/reset-password" + queryString);

@@ -18,6 +18,8 @@ import {
   Link,
   Heading,
   Flex,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import api from "../../store/api/api";
 import { useRouter } from "next/router";
@@ -42,7 +44,7 @@ type FormData = z.infer<typeof schema>;
 
 const ResetPassword = () => {
   const router = useRouter();
-  const [resetPassword, error] = api.usePostApiAuthResetPasswordMutation();
+  const [resetPassword, data] = api.usePostApiAuthResetPasswordMutation();
   const token = (router.query.token || "").toString();
   const email = (router.query.email || "").toString();
 
@@ -63,7 +65,7 @@ const ResetPassword = () => {
         confirmPassword: data.confirmPassword,
       },
     }).unwrap();
-    console.log(error);
+    console.log(data);
     console.log("success");
     //return await router.push("/app");
   });
@@ -76,26 +78,38 @@ const ResetPassword = () => {
       <AuthLayout>
         <VStack spacing={8}>
           <Heading>Reset Password</Heading>
-          <QueryErrorAlert error={error.error} />
-          <Box w="full">
-            <form onSubmit={onSubmit}>
-              <VStack spacing={4}>
-                <FormControl isInvalid={errors.password != null}>
-                  <FormLabel>New Password</FormLabel>
-                  <PasswordField {...register("password")} />
-                  <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
-                </FormControl>
-                <FormControl isInvalid={errors.confirmPassword != null}>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <PasswordField {...register("confirmPassword")} />
-                  <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
-                </FormControl>
-              </VStack>
-              <Button my={10} w="full" isLoading={isSubmitting} type="submit">
-                Reset Password
+          <QueryErrorAlert error={data.error} />
+          {data.isSuccess ? (
+            <Box>
+              <Alert py={5} status="success" variant="left-accent">
+                <AlertIcon />
+                <Text>Your password has successfully been reset.</Text>
+              </Alert>
+              <Button my={3} w="full" onClick={() => router.push("/auth/login")}>
+                Login
               </Button>
-            </form>
-          </Box>
+            </Box>
+          ) : (
+            <Box w="full">
+              <form onSubmit={onSubmit}>
+                <VStack spacing={4}>
+                  <FormControl isInvalid={errors.password != null}>
+                    <FormLabel>New Password</FormLabel>
+                    <PasswordField {...register("password")} />
+                    <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
+                  </FormControl>
+                  <FormControl isInvalid={errors.confirmPassword != null}>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <PasswordField {...register("confirmPassword")} />
+                    <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
+                  </FormControl>
+                </VStack>
+                <Button my={10} w="full" isLoading={isSubmitting} type="submit">
+                  Reset Password
+                </Button>
+              </form>
+            </Box>
+          )}
         </VStack>
       </AuthLayout>
     </>

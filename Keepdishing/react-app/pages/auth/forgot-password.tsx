@@ -18,6 +18,8 @@ import {
   Link,
   Heading,
   Flex,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import api from "../../store/api/api";
 import { useRouter } from "next/router";
@@ -39,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 const ResetPassword = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
-  const [login, error] = api.usePostApiAuthLogInMutation();
+  const [forgotPassword, data] = api.usePostApiAuthForgotPasswordMutation();
   console.log({ props });
 
   const {
@@ -54,12 +56,13 @@ const ResetPassword = (props: InferGetServerSidePropsType<typeof getServerSidePr
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    // await login({
-    //   loginInput: {
-    //     username: data.email,
-    //   },
-    // }).unwrap();
+    await forgotPassword({
+      forgotPasswordInput: {
+        email: data.email,
+      },
+    }).unwrap();
     //return await router.push("/app");
+    console.log("Success");
   });
 
   return (
@@ -70,7 +73,15 @@ const ResetPassword = (props: InferGetServerSidePropsType<typeof getServerSidePr
       <AuthLayout>
         <VStack spacing={8}>
           <Heading>Reset Password</Heading>
-          <QueryErrorAlert error={error.error} />
+          <QueryErrorAlert error={data.error} />
+
+          {data.isSuccess && (
+            <Alert py={5} status="success" variant="left-accent">
+              <AlertIcon />
+              <Text>A password reset link has been sent to your email.</Text>
+            </Alert>
+          )}
+
           <Box w="full">
             <form onSubmit={onSubmit}>
               <VStack spacing={4}>
@@ -80,7 +91,7 @@ const ResetPassword = (props: InferGetServerSidePropsType<typeof getServerSidePr
                   <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
                 </FormControl>
               </VStack>
-              <Button my={10} w="full" isLoading={isSubmitting} type="submit">
+              <Button isDisabled={!data.isUninitialized} my={10} w="full" isLoading={isSubmitting} type="submit">
                 Reset Password
               </Button>
             </form>
