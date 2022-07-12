@@ -1,9 +1,13 @@
 ﻿using Keepdishing.Model;
+using Keepdishing.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Web;
 
 namespace Keepdishing.Controllers
 {
@@ -14,11 +18,30 @@ namespace Keepdishing.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailService _emailService;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
+        }
+
+        [HttpGet("GetCurrentUser")]
+        public async Task<CurrentUser> GetCurrentUser()
+        {
+            if (!User.Identity.IsAuthenticated) return null;
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            return new CurrentUser
+            {
+                Firstname = user.FirstName,
+                Surname = user.Surname,
+                UserName = user.UserName,
+                Email = user.Email,
+                EmailConfirmed = user.EmailConfirmed
+            };
         }
 
         [HttpPost("LogIn")]
@@ -27,6 +50,15 @@ namespace Keepdishing.Controllers
             var result = await _signInManager.PasswordSignInAsync(credentials.Username, credentials.Password, credentials.RememberMe, false);
             return result.Succeeded ? Ok(result) : Unauthorized(new ErrorResponse("Invalid Login Details"));
         }
+
+        [Authorize]
+        [HttpPost("Logout")]
+        public async Task<ActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok();
+        }
+
 
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp(SignupUpInput signupUpInput)
@@ -43,37 +75,61 @@ namespace Keepdishing.Controllers
 
             if (result.Succeeded)
             {
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmationLink = Url.Action("ConfirmEmail", "Auth", new { token, email = user.Email }, Request.Scheme);
+                await _emailService.SendEmailConfirmation(confirmationLink, user.Email);
+
                 await _signInManager.SignInAsync(user, true);
                 return Ok(result);
             }
 
             return BadRequest(result);
         }
-    
 
-    [HttpGet("GetCurrentUser")]
-        public async Task<CurrentUser> GetCurrentUser() 
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
         {
-            if (!User.Identity.IsAuthenticated) return null;
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return NotFound();
 
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            return new CurrentUser
-            {
-                Firstname = user.FirstName,
-                Surname = user.Surname,
-                UserName = user.UserName,
-                Email = user.Email,
-                EmailConfirmed = user.EmailConfirmed
-            };
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return result.Succeeded ? Redirect("/app") : BadRequest();
         }
 
-        [Authorize]
-        [HttpPost("Logout")]
-        public async Task<ActionResult> Logout()
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordInput forgotPasswordInput)
         {
-            await _signInManager.SignOutAsync();
+            var user = await _userManager.FindByEmailAsync(forgotPasswordInput.Email);
+            if (user == null)
+            {
+                return NotFound(new ErrorResponse("No user with this email exists"));
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            //var confirmationLink =$"{Request.Scheme}://{Request.Host}/auth/reset-password?token=${token}&email={forgotPasswordInput.Email}";
+            var confirmationLink = Url.Action("ConfirmForgotPassword", "Auth", new { token, email = user.Email }, Request.Scheme);
+
+            await _emailService.SendForgotPasswordEmail(confirmationLink, forgotPasswordInput.Email);
             return Ok();
         }
+
+        [HttpGet("ConfirmForgotPassword")]
+        public RedirectResult ConfirmForgotPassword()
+        {
+            var queryString = Request.QueryString;
+            return Redirect("/auth/reset-password" + queryString);
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordInput resetPasswordInput)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordInput.Email);
+            if (user == null) return NotFound();
+
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordInput.Token, resetPasswordInput.Password);
+            return result.Succeeded ? Ok(result) : BadRequest(result);
+        }
+
     }
 
     public record LoginInput
@@ -95,6 +151,28 @@ namespace Keepdishing.Controllers
 
         [Required]
         public string Surname { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        [Required]
+        public string ConfirmPassword { get; set; }
+    }
+    public record ForgotPasswordInput
+    {
+
+        [Required]
+        public string Email { get; set; }
+
+    }
+
+    public record ResetPasswordInput
+    {
+        [Required]
+        public string Token { get; set; }
 
         [Required]
         public string Email { get; set; }

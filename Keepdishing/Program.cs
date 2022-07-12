@@ -7,11 +7,18 @@ using Npgsql;
 using Serilog;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Keepdishing.Model;
+using Keepdishing.Services;
+using Microsoft.Extensions.FileProviders;
 
 /**
  * Load environment variables from .env file
  */
 DotEnv.Load();
+
+var emailSender = Environment.GetEnvironmentVariable("EMAIL_SENDER"); ///////////
+var sendgridApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY"); ////
+var mailTrapUser = Environment.GetEnvironmentVariable("MAIL_TRAP_USER"); ////////
+var mailTrapPass = Environment.GetEnvironmentVariable("MAIL_TRAP_PASS"); ////////
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,12 +55,28 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.Services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddProxies();
+
+builder.Services.AddFluentEmail(emailSender, "Keepdishing").AddLiquidRenderer(options =>
+{
+    options.FileProvider = new PhysicalFileProvider
+    (
+        Path.Combine(AppContext.BaseDirectory, "Liquid")
+    );
+
+})
+.AddSmtpSender("localhost", 1025);
+//.AddMailtrapSender(mailTrapUser, mailTrapPass, "smtp.mailtrap.io");
+//.AddSendGridSender(sendgridApiKey);
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
@@ -72,7 +95,9 @@ else
 app.UseStaticFiles();
 app.UseRouting();
 
-//Add Header to API Requests so that we return 401 instead of redirecting to login page 
+/**
+ * Add Header to API Requests so that we return 401 instead of redirecting to login page 
+ */
 app.Use(async (context, next) =>
 {
     if (context.Request.Path.Value.StartsWith("/api"))
@@ -85,12 +110,20 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 app.UseAuthorization();
 
+/**
+ * This allows us to use regular MVC pages if we want.
+ * Also sets up our API Controllers. These are hit before we proxy to NextJS
+ */
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapRazorPages();
     endpoints.MapControllers();
 });
 
+/**
+ * Short circuit request when trying to access secured routes on the frontend if not logged in
+ * This should be defined after app.UseAuthentication()
+ */
 app.Use(async (context, next) =>
 {
     if (context.Request.Path.Value.StartsWith("/app"))
@@ -112,10 +145,9 @@ app.RunProxy(proxy => proxy.UseHttp(
     Environment.GetEnvironmentVariable("FRONTEND_URL"),
     builder =>
     {
-        builder.WithHandleFailure(async (c, e) =>
-        {
-            c.Response.StatusCode = 403;
-            await c.Response.WriteAsync("Things borked.");
+        builder.WithHandleFailure((c, e) => {
+            c.Response.Redirect("/Error");
+            return Task.CompletedTask;
         });
     }
 ));

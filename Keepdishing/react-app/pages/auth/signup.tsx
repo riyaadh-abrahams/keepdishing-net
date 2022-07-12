@@ -2,6 +2,7 @@ import {
   Container,
   Center,
   Heading,
+  Text,
   Box,
   VStack,
   FormControl,
@@ -16,6 +17,10 @@ import {
   AlertTitle,
   UnorderedList,
   ListItem,
+  HStack,
+  SimpleGrid,
+  Flex,
+  Link,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,6 +30,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import api from "../../store/api/api";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import AuthLayout from "../../layouts/AuthLayout";
+import NextLink from "next/link";
+import Head from "next/head";
 
 const Signup = () => {
   const router = useRouter();
@@ -67,48 +75,65 @@ const Signup = () => {
   });
 
   return (
-    <Container h="100vh">
-      <Center w="full" h="full" flexDirection="column">
-        <Heading mb={5}>Signup</Heading>
-
-        <QueryErrorAlert error={error.error} />
-
-        <Box w="full">
-          <form onSubmit={onSubmit}>
-            <VStack>
-              <FormControl isInvalid={errors.firstName != null}>
-                <FormLabel>Name</FormLabel>
-                <Input {...register("firstName")} />
-                <FormErrorMessage>{errors.firstName && errors.firstName.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={errors.surname != null}>
-                <FormLabel>Surname</FormLabel>
-                <Input {...register("surname")} />
-                <FormErrorMessage>{errors.surname && errors.surname.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={errors.email != null}>
-                <FormLabel>Email</FormLabel>
-                <Input {...register("email")} />
-                <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={errors.password != null}>
-                <FormLabel>Password</FormLabel>
-                <PasswordField {...register("password")} />
-                <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={errors.confirmPassword != null}>
-                <FormLabel>Confirm Password</FormLabel>
-                <PasswordField {...register("confirmPassword")} />
-                <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
-              </FormControl>
-            </VStack>
-            <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
-              Submit
-            </Button>
-          </form>
-        </Box>
-      </Center>
-    </Container>
+    <>
+      <Head>
+        <title>Keepdishing | Register</title>
+      </Head>
+      <AuthLayout>
+        <VStack spacing={8}>
+          <Heading>Signup</Heading>
+          <QueryErrorAlert error={error.error} />
+          <Box w="full">
+            <form onSubmit={onSubmit}>
+              <VStack spacing={4}>
+                <SimpleGrid gap={3} columns={[1, 2]} w="full">
+                  <FormControl isInvalid={errors.firstName != null}>
+                    <FormLabel>Name</FormLabel>
+                    <Input {...register("firstName")} />
+                    <FormErrorMessage>{errors.firstName && errors.firstName.message}</FormErrorMessage>
+                  </FormControl>
+                  <FormControl isInvalid={errors.surname != null}>
+                    <FormLabel>Surname</FormLabel>
+                    <Input {...register("surname")} />
+                    <FormErrorMessage>{errors.surname && errors.surname.message}</FormErrorMessage>
+                  </FormControl>
+                </SimpleGrid>
+                <FormControl isInvalid={errors.email != null}>
+                  <FormLabel>Email</FormLabel>
+                  <Input {...register("email")} />
+                  <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={errors.password != null}>
+                  <FormLabel>Password</FormLabel>
+                  <PasswordField {...register("password")} />
+                  <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={errors.confirmPassword != null}>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <PasswordField {...register("confirmPassword")} />
+                  <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
+                </FormControl>
+              </VStack>
+              <Flex mt={8} justifyContent="flex-end">
+                <Button w="full" isLoading={isSubmitting} type="submit">
+                  Sign Up
+                </Button>
+              </Flex>
+            </form>
+          </Box>
+          <Center>
+            <Text>
+              Already have an account?{" "}
+              <NextLink href="/auth/login" passHref>
+                <Link ml="1" textAlign="end" w="full">
+                  Log In
+                </Link>
+              </NextLink>
+            </Text>
+          </Center>
+        </VStack>
+      </AuthLayout>
+    </>
   );
 };
 
